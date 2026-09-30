@@ -1,6 +1,7 @@
 {
   "name": "klokit",
   "private": true,
+  "license": "UNLICENSED",
   "description": "Klokit: website, API, database en Expo-app",
   "scripts": {
     "setup": "node scripts/setup.mjs",

@@ -236,3 +236,7 @@ npx expo start
 - De app zoekt de API automatisch op het netwerkadres van je computer, poort 4000.
 - Een vast adres instellen kan in `mobile/.env.local`: `EXPO_PUBLIC_API_URL=http://192.168.x.x:4000/api`.
 - In de browser testen kan ook: `npx expo start --web` (zonder kaart; die werkt alleen op de telefoon).
+
+## Licentie
+
+Copyright (c) 2026 Serhat Yildirim en Eyobiel. **Alle rechten voorbehouden.** De code mag niet zonder schriftelijke toestemming worden gebruikt, gekopieerd of verspreid. Zie [LICENSE](LICENSE).

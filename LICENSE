@@ -1,0 +1,40 @@
+Klokit — Licentie (alle rechten voorbehouden)
+
+Copyright (c) 2026 Serhat Yildirim en Eyobiel. Alle rechten voorbehouden.
+
+Deze software, inclusief de broncode, het ontwerp, de huisstijl, de naam
+"Klokit", het logo en alle bijbehorende bestanden en documentatie (samen:
+"de Software"), is eigendom van Serhat Yildirim en Eyobiel (samen: "de
+Eigenaren").
+
+1. Geen gebruik zonder toestemming
+   Het is zonder voorafgaande schriftelijke toestemming van de Eigenaren niet
+   toegestaan de Software of een deel daarvan te gebruiken, kopiëren, wijzigen,
+   samenvoegen, publiceren, verspreiden, in sublicentie te geven, te verkopen
+   of op een andere manier beschikbaar te stellen aan derden.
+
+2. Inzage
+   Wie toegang heeft tot deze repository, mag de Software alleen bekijken en
+   gebruiken voor zover dat nodig is voor werk dat de Eigenaren uitdrukkelijk
+   hebben gevraagd of goedgekeurd.
+
+3. Onderdelen van derden
+   De Software maakt gebruik van open-sourcepakketten van derden (bijvoorbeeld
+   via npm). Die pakketten vallen onder hun eigen licenties en niet onder deze
+   licentie. Kaartgegevens zijn afkomstig van OpenStreetMap-bijdragers
+   (https://www.openstreetmap.org/copyright).
+
+4. Geen garantie
+   De Software wordt geleverd "zoals hij is", zonder enige garantie. De
+   Eigenaren zijn niet aansprakelijk voor schade die voortvloeit uit het
+   gebruik van de Software, voor zover de wet dat toestaat.
+
+Voor toestemming of vragen: neem contact op met de Eigenaren.
+
+---
+
+English summary: Copyright (c) 2026 Serhat Yildirim and Eyobiel. All rights
+reserved. This software is proprietary. No part of it may be used, copied,
+modified, distributed or sold without prior written permission from the
+owners. Third-party open-source components remain under their own licenses.
+The software is provided "as is", without warranty of any kind.
