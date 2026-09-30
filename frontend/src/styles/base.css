@@ -1,0 +1,19 @@
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+/* Achtergrond van de app als vangnet, zodat er nooit een witte strook onder een pagina verschijnt. */
+body { -webkit-font-smoothing: antialiased; background: #F4F8F6; }
+
+/* Alleen voor schermlezers. Zet dit op een <div> of <span>, niet op een <table>:
+   tabellen negeren height: 1px en maken de pagina dan langer. */
+.sr-only {
+  position: absolute !important; width: 1px !important; height: 1px !important;
+  margin: -1px !important; padding: 0 !important; border: 0 !important;
+  overflow: hidden !important; clip-path: inset(50%) !important; white-space: nowrap !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition: none !important; }
+}

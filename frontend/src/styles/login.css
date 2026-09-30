@@ -1,0 +1,43 @@
+.app .login { display: grid; grid-template-columns: 1fr 1fr; min-height: 100vh; }
+
+.app .login-l { padding: 40px 80px; display: flex; flex-direction: column; background: #fff; }
+.app .login-form { margin: auto 0; padding: 40px 0; max-width: 420px; width: 100%; }
+.app .login-form h1 { font-size: 42px; font-weight: 800; letter-spacing: -.5px; margin-bottom: 6px; }
+.app .login-form .intro { color: var(--mute); margin-bottom: 30px; }
+
+.app .login-row {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;
+  margin: -4px 0 24px; font-size: 14px;
+}
+.app .chk { display: flex; gap: 8px; align-items: center; font-weight: 500; cursor: pointer; }
+.app .chk input { width: 18px; height: 18px; accent-color: #0E3B43; margin: 0; }
+.app .btn.full { width: 100%; padding: 14px; }
+
+.app .or { display: flex; align-items: center; gap: 12px; color: var(--mute); margin: 22px 0; font-size: 14px; }
+.app .or::before, .app .or::after { content: ""; flex: 1; border-top: 1px solid var(--line); }
+
+.app .code { background: var(--mintl); border-radius: 16px; padding: 16px 18px; font-size: 14px; }
+.app .code b { display: block; font-size: 15px; }
+.app .bottom { font-size: 14px; color: var(--mute); }
+
+.app .login-r { background: var(--deep); position: relative; overflow: hidden; color: #fff; }
+.app .login-r svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.app .quote {
+  position: absolute; left: 60px; right: 60px; bottom: 60px;
+  background: #fff; color: var(--deep); border-radius: 24px; padding: 28px;
+}
+.app .quote h2 { font-size: 26px; line-height: 1.15; margin-bottom: 8px; }
+.app .quote p { color: var(--mute); }
+
+@media (max-width: 1080px) {
+  .app .login-l { padding: 32px 48px; }
+  .app .quote { left: 32px; right: 32px; bottom: 32px; }
+}
+
+@media (max-width: 860px) {
+  .app .login { grid-template-columns: 1fr; }
+  .app .login-r { display: none; }
+  .app .login-l { padding: 24px 16px; }
+  .app .login-form { max-width: none; }
+  .app .login-form h1 { font-size: 34px; }
+}

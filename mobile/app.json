@@ -1,0 +1,61 @@
+{
+  "expo": {
+    "name": "Klokit",
+    "slug": "klokit",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "nl.klokit.app",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Klokit gebruikt je locatie alleen op het moment van in- en uitklokken, om te controleren of je op de werkvloer bent."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#0E3B43",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "package": "nl.klokit.app"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-status-bar",
+      "expo-secure-store",
+      "expo-font",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#0E3B43"
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Klokit gebruikt je locatie alleen op het moment van in- en uitklokken, om te controleren of je op de werkvloer bent.",
+          "isIosBackgroundLocationEnabled": false,
+          "isAndroidBackgroundLocationEnabled": false
+        }
+      ],
+      "@react-native-community/datetimepicker"
+    ],
+    "scheme": "klokit",
+    "primaryColor": "#0E3B43",
+    "backgroundColor": "#F4F8F6",
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "klokit",
+  "private": true,
+  "description": "Klokit: website, API, database en Expo-app",
+  "scripts": {
+    "setup": "node scripts/setup.mjs",
+    "start": "node scripts/start.mjs",
+    "stop": "docker compose down",
+    "logs": "docker compose logs -f api",
+    "reset-db": "docker compose down -v && docker compose up -d"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
