@@ -1,0 +1,124 @@
+/* Instellingen en onboarding (werkzone) — naar Settings.dc.html en Onboarding.dc.html */
+.app .set-grid { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 28px; align-items: start; padding-bottom: 80px; }
+.app .sub { position: sticky; top: 24px; display: grid; gap: 2px; }
+.app .sub a {
+  display: block; padding: 10px 14px; border-radius: 12px; font-weight: 600; color: var(--mute);
+  text-decoration: none; border: 1px solid transparent;
+}
+.app .sub a:hover { color: var(--deep); }
+.app .sub a.on { background: #fff; color: var(--deep); border-color: var(--line); }
+.app .sec { margin-bottom: 22px; scroll-margin-top: 24px; }
+.app .sec-intro { margin: -8px 0 16px; }
+.app .two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.app .in:disabled, .app .in[readonly] { background: var(--bg); color: var(--mute); }
+.app .field .help a { font-weight: 700; }
+
+/* Adres met suggesties */
+.app .addr { position: relative; }
+.app .addr-list {
+  position: absolute; left: 0; right: 0; top: 74px; z-index: 1000; list-style: none;
+  background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 6px;
+  box-shadow: 0 12px 28px rgba(14, 59, 67, .14);
+}
+.app .addr-list li { padding: 10px 12px; border-radius: 10px; cursor: pointer; font-size: 14px; }
+.app .addr-list li:hover, .app .addr-list li.on { background: var(--mintl); }
+
+/* Werkzone: kaart + bediening */
+.app .zone { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 22px; align-items: start; }
+.app .zone-side { display: grid; gap: 14px; }
+.app .zone-map { position: relative; z-index: 0; isolation: isolate; border-radius: 16px; overflow: hidden; border: 1px solid var(--line); background: var(--mintl); }
+.app .zone-map .leaflet-container { font-family: inherit; }
+.app .zone-hint {
+  position: absolute; left: 14px; bottom: 14px; z-index: 500; pointer-events: none;
+  background: #fff; border-radius: 14px; padding: 10px 14px; font-size: 14px; box-shadow: 0 4px 12px rgba(14, 59, 67, .15);
+}
+.zone-pin { background: none; border: 0; }
+.leaflet-tooltip.zone-label {
+  background: #0E3B43; color: #fff; border: 0; border-radius: 12px; padding: 6px 12px;
+  font: 700 14px 'Figtree', system-ui, sans-serif; box-shadow: none;
+}
+.leaflet-tooltip.zone-label::before { border-top-color: #0E3B43; }
+
+.app .lbl { display: flex !important; justify-content: space-between; align-items: center; }
+.app .val { font-family: var(--display); font-weight: 800; font-size: 22px; }
+.app .range { width: 100%; accent-color: #0E3B43; height: 30px; margin: 6px 0 4px; }
+.app .sl { display: flex; justify-content: space-between; font-size: 13px; color: var(--mute); }
+.app .tip { background: #FFF7DA; border-radius: 14px; padding: 14px 16px; font-size: 14px; }
+.app .coords { font-size: 13px; color: var(--mute); }
+.app .btn.full { width: 100%; }
+
+/* Klokregels */
+.app .tg { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.app .tg:last-child { border-bottom: 0; }
+.app .tg small { display: block; color: var(--mute); font-size: 14px; }
+.app .sw {
+  width: 44px; height: 26px; border-radius: 999px; background: #C9DCD3; position: relative;
+  flex: none; border: 0; cursor: pointer; padding: 0;
+}
+.app .sw::after {
+  content: ""; position: absolute; left: 3px; top: 3px; width: 20px; height: 20px;
+  border-radius: 50%; background: #fff; transition: left .15s;
+}
+.app .sw.on { background: var(--deep); }
+.app .sw.on::after { left: 21px; }
+.app .sw:disabled { opacity: .5; cursor: not-allowed; }
+.app .inline-select {
+  font: inherit; color: var(--deep); font-weight: 700; border: 1px solid var(--line);
+  border-radius: 8px; padding: 1px 4px; background: #fff;
+}
+
+.app .notice.ok { background: #DDF3E7; color: #146B3A; }
+
+/* Balk onderaan bij niet-opgeslagen wijzigingen */
+.app .savebar {
+  position: fixed; left: 250px; right: 0; bottom: 0; z-index: 1100;
+  display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap;
+  background: #fff; border-top: 1px solid var(--line); padding: 14px 40px;
+  box-shadow: 0 -8px 24px rgba(14, 59, 67, .08); font-weight: 600;
+}
+
+/* Onboarding "Waar staat je restaurant?" */
+.app .onb { display: grid; grid-template-columns: 460px minmax(0, 1fr); min-height: 100vh; }
+.app .onb-l { background: #fff; padding: 30px 40px; display: flex; flex-direction: column; border-right: 1px solid var(--line); }
+.app .prog { display: flex; gap: 6px; margin: 26px 0 8px; }
+.app .prog i { flex: 1; height: 6px; border-radius: 9px; background: var(--line); }
+.app .prog i.on { background: var(--deep); }
+.app .stp { font-size: 13px; color: var(--mute); margin-bottom: 20px; }
+.app .onb-l h1 { font-size: 32px; font-weight: 800; margin-bottom: 6px; }
+.app .onb-l .intro { color: var(--mute); margin-bottom: 24px; }
+.app .onb-foot { margin-top: auto; padding-top: 24px; display: flex; justify-content: space-between; gap: 12px; }
+.app .onb-map .zone-map { border-radius: 0; border: 0; height: 100% !important; min-height: 100vh; }
+.app .onb-locate { position: absolute; right: 16px; top: 16px; z-index: 500; }
+
+@media (max-width: 1200px) {
+  .app .zone { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 900px) {
+  .app .set-grid { grid-template-columns: 1fr; gap: 16px; }
+  .app .sub { position: static; display: flex; overflow-x: auto; }
+  .app .two { grid-template-columns: 1fr; gap: 0; }
+  .app .savebar { left: 0; padding: 12px 16px; }
+  .app .onb { grid-template-columns: 1fr; }
+  .app .onb-l { padding: 24px 16px; border-right: 0; }
+  .app .onb-map .zone-map { min-height: 360px; height: 360px !important; }
+}
+
+/* Adres zoeken op de kaart */
+.app .zone-mapwrap { position: relative; }
+.app .map-search {
+  position: absolute; top: 14px; left: 14px; right: 14px; max-width: 460px; z-index: 1000;
+}
+.app .map-search .in {
+  padding-left: 42px; border-color: #fff; border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(14, 59, 67, .18);
+}
+.app .map-search .in:focus { border-color: var(--deep); }
+.app .map-search-icon { position: absolute; left: 14px; top: 15px; color: var(--mute); pointer-events: none; }
+.app .map-search .addr-list { top: calc(100% + 6px); }
+.app .onb-map .map-search { right: 210px; }
+.app .onb-map .onb-locate { top: 14px; }
+.app .zone-hint { left: 14px; right: auto; }
+@media (max-width: 900px) {
+  .app .onb-map .map-search { right: 14px; top: 70px; }
+}

@@ -1,0 +1,54 @@
+.app.reg { background: var(--mintl); }
+.app .reg-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding: 24px 48px; }
+.app .reg-top span { color: var(--mute); }
+
+.app .reg-box {
+  max-width: 940px; margin: 20px auto 60px;
+  display: grid; grid-template-columns: 1fr 1fr;
+  background: #fff; border-radius: 28px; overflow: hidden; border: 1px solid var(--line);
+}
+.app .reg-form { padding: 44px; }
+.app .reg-form h1 { font-size: 34px; font-weight: 800; margin-bottom: 6px; }
+.app .reg-form .intro { color: var(--mute); margin-bottom: 26px; }
+.app .field .help { font-size: 13px; color: var(--mute); margin-top: 5px; }
+
+.app .seg2 {
+  display: grid; grid-template-columns: 1fr 1fr;
+  background: var(--mintl); border-radius: 999px; padding: 5px; margin-bottom: 26px;
+}
+.app .seg2 button {
+  text-align: center; padding: 10px; min-height: 44px; border-radius: 999px;
+  font: 700 14px/1.2 inherit; font-family: inherit;
+  color: var(--mute); background: transparent; border: 0; cursor: pointer;
+}
+.app .seg2 .on { background: #fff; color: var(--deep); box-shadow: 0 2px 6px rgba(14, 59, 67, .1); }
+
+.app .two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.app .code-in { font-family: var(--display); font-weight: 800; font-size: 24px; letter-spacing: 6px; }
+.app .terms { font-size: 13px; color: var(--mute); margin: 6px 0 20px; }
+
+.app .reg-steps { background: var(--deep); color: #fff; padding: 44px; }
+.app .reg-steps h2 { font-size: 24px; margin-bottom: 24px; }
+.app .reg-steps ol { list-style: none; }
+.app .reg-steps .step { display: flex; gap: 16px; margin-bottom: 24px; }
+.app .reg-steps .n {
+  width: 36px; height: 36px; flex: none; border-radius: 50%;
+  border: 2px solid var(--mint); display: grid; place-items: center; font-weight: 800;
+}
+.app .reg-steps .step.on .n { background: var(--pin); border-color: var(--pin); color: var(--deep); }
+.app .reg-steps b { display: block; font-size: 16px; }
+.app .reg-steps p { color: #C6E0D5; font-size: 14px; }
+.app .reg-note {
+  margin-top: 30px; background: rgba(255, 255, 255, .08); border-radius: 16px;
+  padding: 16px; font-size: 14px; color: #D4E9DF;
+}
+
+@media (max-width: 860px) {
+  .app .reg-top { padding: 16px; }
+  .app .reg-box { grid-template-columns: 1fr; margin: 0 16px 40px; border-radius: 20px; }
+  .app .reg-form, .app .reg-steps { padding: 28px 20px; }
+}
+
+@media (max-width: 480px) {
+  .app .two { grid-template-columns: 1fr; gap: 0; }
+}

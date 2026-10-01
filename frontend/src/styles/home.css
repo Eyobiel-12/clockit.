@@ -1,0 +1,517 @@
+/* Alleen de kleuren van het logo: geel (pin), petrol (rand en naam) en wit, plus tinten daarvan. */
+.home {
+  --pin: #FFC845;
+  --pin-dark: #F5B92A;
+  --pin-soft: #FFF1C6;
+  --deep: #0E3B43;
+  --deep-dark: #082A30;
+  --deep-soft: #2F5B62;
+  --deep-line: rgba(14, 59, 67, .28);
+  --paper: #FFFFFF;
+  --gutter: 64px;
+  --pad-x: max(var(--gutter), calc((100% - 1312px) / 2));
+  --round: 48px;
+  --display: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --mono: 'Space Mono', ui-monospace, monospace;
+  min-height: 100vh; position: relative;
+  background: var(--paper);
+  color: var(--deep);
+  font-family: 'Archivo', system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.55;
+}
+.home a { color: inherit; text-decoration: none; }
+.home :focus-visible { outline: 3px solid var(--deep); outline-offset: 3px; }
+
+.home .skip {
+  position: absolute; left: 16px; top: -60px; z-index: 10;
+  background: var(--deep); color: #fff; padding: 10px 16px; font-weight: 700;
+}
+.home .skip:focus { top: 16px; }
+
+/* Knoppen */
+.home .btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 48px; padding: 12px 26px;
+  font-weight: 700; border: 2px solid var(--deep);
+  background: var(--deep); color: #fff;
+  transition: background-color .15s, color .15s;
+}
+.home .btn:hover { background: var(--deep-dark); border-color: var(--deep-dark); }
+.home .btn.ghost { background: transparent; color: var(--deep); }
+.home .btn.ghost:hover { background: var(--deep); color: #fff; }
+
+/* Navigatie */
+.home .nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 26px var(--pad-x);
+  position: absolute; top: 0; left: 0; right: 0; z-index: 10;
+}
+/* Hetzelfde Klokit-logo als op de andere pagina's (.app .logo): gele pin + naam. */
+.home .logo {
+  display: inline-flex; align-items: center; gap: 12px;
+  font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 800; font-size: 28px;
+  line-height: 1; color: var(--deep);
+}
+.home .logo i {
+  width: 26px; height: 26px; display: inline-block; flex: none;
+  border-radius: 50% 50% 50% 0; transform: rotate(-45deg);
+  background: var(--pin); border: 3.5px solid var(--deep); box-sizing: border-box;
+}
+.home .nav-menu { display: flex; align-items: center; gap: 34px; }
+.home .nav-menu ul { display: flex; gap: 34px; list-style: none; font-weight: 500; }
+.home .nav-menu ul a:hover { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 5px; }
+.home .nav-toggle {
+  display: none; width: 48px; height: 48px;
+  align-items: center; justify-content: center;
+  background: transparent; border: 2px solid var(--deep); color: var(--deep);
+  cursor: pointer;
+}
+
+/* Hero: petrol (groen van het logo), witte tekst, gele knoppen en een witte weekkaart. */
+.home .nav, .home .hero-scene, .home .hero { background: var(--deep); color: #fff; }
+.home .nav .logo { color: #fff; }
+/* Scheiding na de hero: ronde onderhoeken, de witte pagina komt eronder vandaan.
+   overflow: clip (geen scroll-container), zodat de sticky hero blijft werken. */
+.home .hero-scene { position: relative; z-index: 5; border-radius: 0 0 var(--round) var(--round); overflow: clip; }
+.home .nav :focus-visible, .home .hero :focus-visible { outline-color: var(--pin); }
+.home .nav-toggle { border-color: var(--pin); color: var(--pin); }
+.home .hero {
+  display: grid; grid-template-columns: 1.1fr 1fr; gap: 56px;
+  padding: 130px var(--pad-x) 110px; align-items: center;
+  overflow-x: clip;
+}
+.home .nav .btn, .home .hero .btn {
+  border-radius: 4px; font-size: 16px;
+  background: var(--pin); border-color: var(--pin); color: var(--deep);
+}
+.home .nav .btn:hover, .home .hero .btn:hover { background: var(--pin-dark); border-color: var(--pin-dark); }
+.home .hero .btn.ghost { background: transparent; border-color: var(--pin); color: var(--pin); }
+.home .hero .btn.ghost:hover { background: var(--pin); color: var(--deep); }
+.home .hero h1 {
+  font-family: 'Archivo', system-ui, sans-serif; font-weight: 900; font-stretch: 78%;
+  font-size: clamp(44px, min(6.2vw, 9.5vh), 94px); line-height: .92; letter-spacing: -.035em;
+  max-width: 6.4em; margin: 20px 0 32px;
+}
+.home .hero .lead { max-width: 500px; font-size: 19px; color: var(--pin-soft); margin-bottom: 34px; }
+.home .cta { display: flex; flex-wrap: wrap; gap: 14px; }
+.home .fine { margin-top: 18px; font-size: 14px; color: var(--pin-soft); }
+
+/* Scène: telefoon onder de weekkaart. --tear, --fly en --reveal animeren van 0 naar 1 zodra .popped erop komt. */
+@property --tear { syntax: '<number>'; inherits: true; initial-value: 0; }
+@property --fly { syntax: '<number>'; inherits: true; initial-value: 0; }
+@property --reveal { syntax: '<number>'; inherits: true; initial-value: 0; }
+.home .hero-visual {
+  --tear: 0; --fly: 0; --reveal: 0;
+  display: grid; place-items: center; justify-self: center; width: 100%; max-width: 480px;
+  /* Terug: telefoon weg, stukken komen terug en de scheur gaat dicht. */
+  transition: --reveal .3s ease-in, --fly .45s ease-out .15s, --tear .3s ease-out .55s;
+}
+/* Vooruit: kaart scheurt, even pauze, stukken vliegen weg en de telefoon popt met een kleine doorschiet. */
+.home .hero-visual.popped {
+  --tear: 1; --fly: 1; --reveal: 1;
+  transition:
+    --tear .45s cubic-bezier(.2, .8, .3, 1),
+    --fly .6s cubic-bezier(.5, 0, .75, 0) .6s,
+    --reveal .6s cubic-bezier(.34, 1.56, .64, 1) .85s;
+}
+.home .hero-phone {
+  grid-area: 1 / 1; display: block; width: 360px; max-width: 100%; height: auto;
+  opacity: min(1, calc(var(--reveal) * 2));
+  /* Gele gloed, zodat de petrol rand van de telefoon loskomt van de petrol achtergrond. */
+  filter: drop-shadow(0 0 36px rgba(255, 200, 69, .35));
+  transform: translateY(calc((1 - var(--reveal)) * 40px)) scale(calc(.55 + var(--reveal) * .45));
+}
+
+/* Weekkaart */
+.home .timecard {
+  --card: var(--paper);
+  grid-area: 1 / 1; position: relative; z-index: 1; width: 100%;
+  display: grid; transform: rotate(2.5deg); color: var(--deep);
+  font-size: 14px;
+}
+/* Twee identieke kaarten op elkaar; elk toont één kant van de scheurlijn. */
+.home .tc-piece {
+  grid-area: 1 / 1; will-change: transform, opacity;
+  opacity: calc(1 - var(--fly));
+  filter: drop-shadow(0 18px 24px rgba(4, 22, 26, .45));
+}
+.home .tc-sheet {
+  position: relative;
+  background: var(--card); padding: 34px 32px 30px; border-radius: 4px;
+}
+.home .tc-piece.top {
+  transform-origin: 0% 60%;
+  transform:
+    translate(calc(var(--tear) * -10px + var(--fly) * -280px), calc(var(--tear) * -16px + var(--fly) * -200px))
+    rotate(calc(var(--tear) * -6deg + var(--fly) * -20deg));
+}
+.home .tc-piece.bottom {
+  transform-origin: 100% 60%;
+  transform:
+    translate(calc(var(--tear) * 22px + var(--fly) * 260px), calc(var(--tear) * 70px + var(--fly) * 260px))
+    rotate(calc(var(--tear) * 9deg + var(--fly) * 24deg));
+}
+/* Minder beweging: alleen overvloeien van papier naar telefoon. */
+@media (prefers-reduced-motion: reduce) {
+  .home .tc-piece, .home .hero-phone { transform: none !important; }
+}
+/* Gekartelde scheurlijn door de tabel; de randen buiten 0-100% laten de stempel heel. */
+.home .tc-piece.top .tc-sheet {
+  clip-path: polygon(-20% -30%, 120% -30%, 120% 57%, 96% 58.5%, 91% 56.5%, 85% 59%, 79% 57%, 74% 58.8%, 68% 56.2%, 61% 58.4%, 55% 56.8%, 49% 59.2%, 43% 57%, 37% 58.6%, 31% 56.4%, 25% 58.9%, 19% 57.2%, 13% 59%, 7% 56.6%, 2% 58.4%, -20% 57.5%);
+}
+.home .tc-piece.bottom .tc-sheet {
+  clip-path: polygon(-20% 57.5%, 2% 58.4%, 7% 56.6%, 13% 59%, 19% 57.2%, 25% 58.9%, 31% 56.4%, 37% 58.6%, 43% 57%, 49% 59.2%, 55% 56.8%, 61% 58.4%, 68% 56.2%, 74% 58.8%, 79% 57%, 85% 59%, 91% 56.5%, 96% 58.5%, 120% 57%, 120% 130%, -20% 130%);
+}
+/* Uitsparing bovenin, zoals bij een echte prikkaart. */
+.home .tc-sheet::before {
+  content: ''; position: absolute; top: 0; left: 50%; translate: -50% 0;
+  width: 64px; height: 12px; border-radius: 0 0 10px 10px; background: var(--deep);
+}
+.home .tc-stamp {
+  position: absolute; top: -18px; right: -26px;
+  background: var(--pin-soft); border: 2.5px solid var(--deep); border-radius: 3px;
+  padding: 6px 12px; color: var(--deep);
+  font-family: var(--mono); font-weight: 700; font-size: 14px; letter-spacing: .06em;
+  text-transform: uppercase; white-space: nowrap; transform: rotate(-9deg);
+}
+.home .tc-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.home .tc-head h2 {
+  font-family: 'Archivo', system-ui, sans-serif; font-weight: 900; font-stretch: 85%;
+  font-size: 26px; letter-spacing: -.02em; margin: 0;
+}
+.home .tc-week { font-family: var(--mono); font-size: 13px; color: var(--deep-soft); }
+.home .tc-meta {
+  display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  margin-top: 8px; padding-bottom: 8px; border-bottom: 2px solid var(--deep);
+  color: var(--deep-soft); font-size: 13px;
+}
+.home .tc-meta b { color: var(--deep); }
+.home .timecard table { width: 100%; border-collapse: collapse; margin-top: 4px; }
+.home .timecard th, .home .timecard td { text-align: left; padding: 12px 4px; border-bottom: 1px dashed var(--deep-line); }
+.home .timecard thead th { font-size: 13px; font-weight: 700; border-bottom: 1px solid var(--deep); padding-top: 10px; }
+.home .timecard tbody th { font-weight: 400; }
+.home .timecard td { font-family: var(--mono); font-size: 16px; }
+.home .timecard .live { color: var(--deep); font-weight: 700; background: var(--pin-soft); }
+.home .tc-total { display: flex; align-items: baseline; justify-content: space-between; margin-top: 16px; font-weight: 700; }
+.home .tc-total b { font-family: var(--mono); font-size: 24px; }
+
+/* Secties */
+.home section { padding: 90px var(--pad-x); scroll-margin-top: 16px; }
+.home main > section {
+  position: relative;
+  margin-top: calc(-1 * var(--round)); padding-top: calc(90px + var(--round));
+  border-radius: 0 0 var(--round) var(--round);
+}
+.home #hoe { z-index: 4; }
+.home #functies { z-index: 3; }
+.home #demo { z-index: 2; }
+.home #prijzen { z-index: 1; }
+.home .paper { background: var(--paper); }
+.home h2 {
+  font-family: var(--display); font-weight: 800;
+  font-size: clamp(44px, 5vw, 64px); line-height: 1; margin-bottom: 18px;
+}
+
+.home .steps {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 48px; border-top: 3px solid var(--deep); list-style: none;
+}
+.home .step { padding: 30px 32px 10px 0; }
+.home .step b {
+  font-family: var(--display); font-size: 48px; line-height: 1; color: var(--deep);
+  display: inline-grid; place-items: center; min-width: 64px; height: 64px; padding: 0 12px;
+  background: var(--pin); border-radius: 4px;
+}
+.home .step h3 { font-size: 22px; margin: 16px 0 8px; }
+.home .step p { color: var(--deep-soft); max-width: 320px; }
+
+.home #functies { background: var(--deep); color: #fff; }
+.home #functies h2 { color: var(--pin); }
+.home .feat { display: grid; grid-template-columns: 1fr 1fr; gap: 70px; align-items: center; }
+.home .feat-list { list-style: none; }
+.home .feat-list li { padding: 18px 0; border-bottom: 1px dashed rgba(255, 241, 198, .35); font-size: 18px; }
+.home .feat-list strong { display: block; font-size: 20px; margin-bottom: 2px; }
+
+.home .sheet {
+  background: var(--paper); padding: 30px;
+  font-family: var(--mono); font-size: 14px;
+  color: var(--deep); box-shadow: 0 14px 30px rgba(8, 42, 48, .45);
+}
+.home .sheet-scroll { overflow-x: auto; }
+.home .sheet table { width: 100%; border-collapse: collapse; }
+.home .sheet th { text-align: left; border-bottom: 2px solid var(--deep); padding: 8px 4px; font-size: 12px; }
+.home .sheet td { padding: 9px 4px; border-bottom: 1px dashed var(--deep-line); white-space: nowrap; }
+.home .sheet td:last-child, .home .sheet th:last-child { text-align: right; }
+.home .flag { color: var(--deep); font-weight: 700; }
+.home td.flag { background: var(--pin-soft); }
+.home .sheet-note { margin-top: 14px; font-size: 12px; }
+
+/* Interactieve demo: echte schermen met klikpunten (components/DemoTour.tsx). */
+.home .demo-sec { background: var(--paper); }
+.home .eyebrow {
+  display: inline-block; margin-bottom: 14px; padding-left: 10px;
+  border-left: 3px solid var(--deep); font-weight: 700;
+}
+.home .demo-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
+.home .demo-tabs button {
+  padding: 10px 20px; border-radius: 999px; cursor: pointer;
+  border: 2px solid var(--deep); background: transparent; color: var(--deep); font: inherit; font-weight: 700;
+}
+.home .demo-tabs button:hover { background: var(--pin-soft); }
+.home .demo-tabs button[aria-selected="true"] { background: var(--deep); color: #fff; }
+.home .demo-panel { margin-top: 40px; }
+
+/* MacBook: deksel met zwarte rand en camera, scherm, en een onderkant die iets breder is. In petroltinten. */
+.home .demo.desktop .demo-device {
+  position: relative; width: 86%; margin: 0 auto;
+  padding: 2.3% 2.3% 2.6%; border-radius: 22px 22px 0 0;
+  background: var(--deep-dark); box-shadow: inset 0 0 0 2px #1B4A52, 0 30px 60px -30px rgba(14, 59, 67, .6);
+}
+.home .demo.desktop .demo-device::before {
+  content: ""; position: absolute; top: 1%; left: 50%; translate: -50% 0;
+  width: 7px; height: 7px; border-radius: 50%; background: #1B4A52; box-shadow: inset 0 0 0 2px #2F5B62;
+}
+.home .demo.desktop .demo-screen { border-radius: 4px; }
+.home .demo-base {
+  position: relative; width: 100%; height: clamp(12px, 1.7vw, 22px); margin: 0 auto;
+  background: linear-gradient(#3E6E75, #2F5B62 35%, #0E3B43);
+  border-radius: 2px 2px 20px 20px / 2px 2px 100% 100%;
+  box-shadow: 0 24px 30px -18px rgba(14, 59, 67, .55);
+}
+/* Uitsparing om het scherm open te klappen. */
+.home .demo-base::before {
+  content: ""; position: absolute; top: 0; left: 50%; translate: -50% 0;
+  width: 14%; height: 45%; border-radius: 0 0 12px 12px; background: #1B4A52;
+}
+
+/* Telefoon: petrol rand, ronde hoeken. */
+.home .demo.phone .demo-device {
+  width: 300px; margin-left: max(0px, calc(50% - 314px));
+  border: 10px solid var(--deep); border-radius: 44px; background: var(--deep);
+  box-shadow: 0 24px 44px -18px rgba(14, 59, 67, .55);
+}
+.home .demo.phone .demo-screen { aspect-ratio: 390 / 844; border-radius: 34px; }
+
+.home .demo-viewport { position: relative; }
+.home .demo-screen {
+  position: relative; aspect-ratio: 1200 / 750; overflow: hidden; background: var(--paper);
+}
+.home .demo-screen img {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  opacity: 0; transition: opacity .35s ease;
+}
+.home .demo-screen img.on { opacity: 1; }
+
+/* Dashboard: muisaanwijzer die naar het volgende punt glijdt en daar "klikt". De punt van de pijl ligt op x/y. */
+.home .demo-cursor {
+  position: absolute; z-index: 2; width: 48px; height: 48px; translate: -50% -50%;
+  padding: 0; border: 0; border-radius: 50%; background: transparent; cursor: pointer;
+  transition: left .7s cubic-bezier(.65, 0, .35, 1), top .7s cubic-bezier(.65, 0, .35, 1);
+}
+.home .demo-cursor:focus-visible { outline: 3px solid var(--deep); outline-offset: 2px; }
+.home .demo-cursor-icon {
+  position: absolute; left: calc(50% - 2px); top: calc(50% - 2px);
+  filter: drop-shadow(0 3px 4px rgba(8, 42, 48, .35));
+}
+.home .demo-click {
+  position: absolute; left: 50%; top: 50%; width: 22px; height: 22px; translate: -50% -50%;
+  border-radius: 50%; background: rgba(255, 200, 69, .75); border: 2px solid var(--deep);
+  animation: demo-click 1.6s ease-out .7s infinite both;
+}
+@keyframes demo-click {
+  0% { scale: .3; opacity: 0; }
+  15% { scale: .6; opacity: 1; }
+  100% { scale: 2.2; opacity: 0; }
+}
+/* App: tikcirkel, zoals een vinger op het scherm. */
+.home .demo-tap {
+  position: absolute; z-index: 2; width: 34px; height: 34px; translate: -50% -50%;
+  border-radius: 50%; border: 3px solid #fff; background: rgba(255, 200, 69, .85); cursor: pointer;
+  box-shadow: 0 0 0 0 rgba(255, 200, 69, .8); animation: demo-pulse 1.6s ease-out infinite;
+}
+.home .demo-tap:focus-visible { outline: 3px solid var(--deep); outline-offset: 4px; }
+@keyframes demo-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(255, 200, 69, .85), 0 0 0 0 rgba(14, 59, 67, .35); }
+  100% { box-shadow: 0 0 0 22px rgba(255, 200, 69, 0), 0 0 0 34px rgba(14, 59, 67, 0); }
+}
+
+.home .demo-tip {
+  position: absolute; z-index: 3; width: min(300px, 70%);
+  background: var(--deep); color: #fff; border-radius: 14px; padding: 16px 18px 14px;
+  box-shadow: 0 16px 30px -10px rgba(8, 42, 48, .55);
+  animation: demo-in .3s ease;
+}
+.home .demo-tip.below { display: none; }
+@keyframes demo-in { from { opacity: 0; } }
+.home .demo.phone .demo-tip { left: calc(100% + 38px); width: 300px; transform: translateY(-50%); }
+.home .demo-count { display: block; font-size: 12px; font-weight: 700; color: var(--pin); letter-spacing: .04em; text-transform: uppercase; }
+.home .demo-tip strong { display: block; font-size: 18px; margin: 4px 0; }
+.home .demo-tip p { font-size: 15px; line-height: 1.45; color: var(--pin-soft); }
+.home .demo-next {
+  margin-top: 12px; padding: 8px 14px; border: 0; border-radius: 6px; cursor: pointer;
+  background: var(--pin); color: var(--deep); font: inherit; font-weight: 700; font-size: 14px;
+}
+.home .demo-next:hover { background: var(--pin-dark); }
+
+.home .demo-cover {
+  position: absolute; inset: 0; z-index: 4; padding: 20px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+  background: rgba(14, 59, 67, .6); backdrop-filter: blur(3px); color: #fff; text-align: center;
+}
+.home .demo-cover h3 { font-family: var(--display); font-size: clamp(28px, 4vw, 48px); line-height: 1.05; max-width: 14em; }
+.home .demo.phone .demo-cover h3 { font-size: 30px; }
+.home .demo-end-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 8px; }
+.home .demo-cover .btn { background: var(--pin); border-color: var(--pin); color: var(--deep); }
+.home .demo-cover .btn:hover { background: var(--pin-dark); border-color: var(--pin-dark); }
+.home .demo-cover .btn.ghost { background: transparent; border-color: var(--pin); color: var(--pin); cursor: pointer; font: inherit; font-weight: 700; }
+.home .demo-cover .btn.ghost:hover { background: var(--pin); color: var(--deep); }
+
+/* Bediening: in de kin van de MacBook, en onder de telefoon. */
+.home .demo-controls {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding-top: 1.4%; color: #fff;
+}
+.home .demo-ctrl-group { position: relative; display: flex; align-items: center; gap: 4px; }
+.home .demo-ctrl {
+  display: inline-grid; place-items: center; width: 34px; height: 34px; padding: 0;
+  border: 0; border-radius: 8px; background: transparent; color: inherit; cursor: pointer;
+}
+.home .demo-ctrl:hover:not(:disabled) { background: rgba(255, 200, 69, .18); color: var(--pin); }
+.home .demo-ctrl:focus-visible { outline: 2px solid var(--pin); outline-offset: 1px; }
+.home .demo-ctrl:disabled { opacity: .35; cursor: default; }
+.home .demo-ctrl-count { min-width: 44px; text-align: center; font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--pin-soft); }
+.home .demo-copied {
+  position: absolute; right: 0; bottom: calc(100% + 8px); white-space: nowrap;
+  background: var(--pin); color: var(--deep); font-size: 13px; font-weight: 700; padding: 5px 10px; border-radius: 6px;
+}
+.home .demo.desktop .demo-device { padding-bottom: 0; }
+.home .demo.desktop .demo-controls { padding: 6px 0 8px; }
+.home .demo.phone .demo-controls {
+  width: 300px; margin: 16px 0 0 max(0px, calc(50% - 314px));
+  padding: 4px 8px; border-radius: 999px; background: var(--deep);
+}
+
+/* Volledig scherm: het apparaat zo groot mogelijk, gecentreerd. */
+.home .demo:fullscreen {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 24px; background: var(--paper); overflow: auto;
+}
+.home .demo.desktop:fullscreen .demo-device { width: min(94vw, calc((100vh - 90px) * 1.5)); }
+.home .demo.desktop:fullscreen .demo-base { width: min(100vw - 48px, calc((100vh - 90px) * 1.6)); }
+.home .demo.phone:fullscreen .demo-device { width: min(300px, calc((100vh - 120px) * .44)); margin: 0; translate: -170px 0; }
+.home .demo.phone:fullscreen .demo-controls { margin: 16px 0 0; translate: -170px 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .home .demo-tap { animation: none; box-shadow: 0 0 0 6px rgba(14, 59, 67, .25); }
+  .home .demo-click { animation: none; opacity: 0; }
+  .home .demo-cursor { transition: none; }
+  .home .demo-screen img, .home .demo-tip { transition: none; animation: none; }
+}
+
+.home .price {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 28px;
+  margin-top: 40px; max-width: 900px;
+}
+.home .plan {
+  background: var(--paper); padding: 36px; border: 3px solid var(--deep);
+  display: flex; flex-direction: column; align-items: flex-start;
+}
+.home .plan.pro { background: var(--deep); color: #fff; }
+.home .plan h3 { font-size: 22px; }
+.home .plan .amt { font-family: var(--display); font-size: 72px; font-weight: 800; line-height: 1; margin: 14px 0; }
+.home .plan ul { list-style: none; }
+.home .plan li { padding: 6px 0; }
+.home .plan .btn { margin-top: 22px; }
+.home .plan.pro .amt { color: var(--pin); }
+.home .plan.pro .btn { background: var(--pin); border-color: var(--pin); color: var(--deep); }
+.home .plan.pro .btn:hover { background: var(--pin-dark); border-color: var(--pin-dark); }
+
+.home .footer {
+  padding: calc(40px + var(--round)) var(--pad-x) 40px; margin-top: calc(-1 * var(--round));
+  display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between;
+  background: var(--deep); color: var(--pin-soft); font-size: 15px;
+}
+
+/* Desktop: hero blijft even staan zodat de animatie in beeld afspeelt. */
+@media (min-width: 1081px) {
+  .home .hero-scene { height: calc(100vh + 300px); }
+  .home .hero {
+    position: sticky; top: 0;
+    height: 100vh; height: 100svh; padding-top: 104px; padding-bottom: 40px;
+  }
+  /* Alles moet binnen één scherm passen: de telefoon schaalt mee met de schermhoogte
+     (de video is 600x1140, dus anders 684px hoog, ook als hij nog onzichtbaar is). */
+  .home .hero-phone { width: auto; height: min(684px, calc(100svh - 170px)); }
+}
+/* Lage schermen (laptops): weekkaart en tekst iets compacter. */
+@media (min-width: 1081px) and (max-height: 760px) {
+  .home .timecard { zoom: .88; }
+  .home .hero h1 { margin: 8px 0 22px; }
+  .home .hero .lead { font-size: 17px; margin-bottom: 24px; }
+}
+@media (min-width: 1081px) and (max-height: 640px) {
+  .home .timecard { zoom: .74; }
+  .home .fine { display: none; }
+}
+
+/* Tablet */
+@media (max-width: 1080px) {
+  .home { --gutter: 40px; }
+  .home .hero { grid-template-columns: 1fr; gap: 48px; }
+  .home .hero-visual { justify-self: start; }
+  .home .feat { grid-template-columns: 1fr; gap: 48px; }
+}
+
+/* Mobiel */
+@media (max-width: 760px) {
+  .home { --gutter: 16px; font-size: 16px; }
+  .home .nav { padding-top: 18px; padding-bottom: 18px; }
+  .home .nav-toggle { display: inline-flex; }
+  .home .nav-menu {
+    display: none;
+    position: absolute; top: 100%; left: 0; right: 0; z-index: 5;
+    flex-direction: column; align-items: stretch; gap: 16px;
+    background: var(--paper); padding: 16px var(--gutter) 24px;
+    border-top: 3px solid var(--deep); border-bottom: 3px solid var(--deep);
+  }
+  .home .nav-menu.open { display: flex; color: var(--deep); }
+  .home .nav-menu .btn { background: var(--deep); border-color: var(--deep); color: #fff; }
+  .home .nav-menu ul { flex-direction: column; gap: 0; }
+  .home .nav-menu ul a { display: block; padding: 12px 0; border-bottom: 1px dashed var(--deep-line); }
+
+  .home { --round: 28px; }
+  .home .hero { padding-top: 100px; padding-bottom: 64px; }
+  .home .hero h1 { margin-top: 16px; }
+  .home .lead, .home .hero .lead { font-size: 18px; }
+  .home .cta .btn { flex: 1 1 auto; }
+
+  .home .timecard { transform: rotate(1.2deg); }
+  .home .tc-sheet { padding: 30px 18px 24px; }
+  .home .tc-stamp { right: -6px; font-size: 12px; }
+  .home .hero-visual { justify-self: center; }
+  .home .hero-phone { width: 260px; }
+
+  .home section { padding-top: 64px; padding-bottom: 64px; }
+  .home main > section { padding-top: calc(64px + var(--round)); }
+  .home .steps { grid-template-columns: 1fr; }
+  .home .step { padding: 24px 0 12px; border-bottom: 1px dashed var(--deep-line); }
+  .home .step:last-child { border-bottom: 0; }
+
+  .home .sheet { padding: 18px; }
+  /* Uitleg onder het apparaat in plaats van eroverheen. */
+  .home .demo-viewport .demo-tip { display: none; }
+  .home .demo-tip.below { display: block; position: static; transform: none; width: auto; margin-top: 16px; }
+  .home .demo.desktop .demo-device { width: 92%; border-radius: 12px 12px 0 0; }
+  .home .demo.phone .demo-controls { width: min(260px, 80%); margin: 14px auto 0; }
+  .home .demo-ctrl { width: 30px; height: 30px; }
+  .home .demo.desktop .demo-ctrl-count { display: none; }
+  .home .demo-tap { width: 26px; height: 26px; }
+  .home .demo-cursor-icon { width: 18px; height: 21px; }
+  .home .demo.phone .demo-device { width: min(260px, 80%); margin: 0 auto; border-width: 8px; border-radius: 36px; }
+  .home .demo.phone .demo-screen { border-radius: 28px; }
+  .home .demo-end-actions .btn { min-height: 40px; padding: 8px 16px; font-size: 14px; }
+  .home .price { grid-template-columns: 1fr; }
+  .home .plan { padding: 28px; }
+  .home .footer { flex-direction: column; }
+}

@@ -1,0 +1,61 @@
+version: 2
+
+updates:
+  - package-ecosystem: npm
+    directory: /backend
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    groups:
+      # Eén PR voor alle testpakketten, in plaats van vijf losse.
+      test-tooling:
+        patterns: ['vitest', '@vitest/*', 'supertest', '@types/supertest']
+      types:
+        patterns: ['@types/*']
+    commit-message:
+      prefix: 'chore(deps)'
+
+  - package-ecosystem: npm
+    directory: /frontend
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    groups:
+      react:
+        patterns: ['react', 'react-dom', '@types/react', '@types/react-dom']
+      test-tooling:
+        patterns: ['vitest', '@vitest/*', '@testing-library/*', 'jsdom']
+      types:
+        patterns: ['@types/*']
+    commit-message:
+      prefix: 'chore(deps)'
+
+  - package-ecosystem: npm
+    directory: /mobile
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    # Expo-pakketten horen bij elkaar en moeten via `npx expo install --fix`
+    # op een SDK-compatibele versie blijven, niet los door Dependabot.
+    ignore:
+      - dependency-name: 'expo'
+      - dependency-name: 'expo-*'
+      - dependency-name: 'react-native'
+      - dependency-name: '@expo/*'
+      - dependency-name: '@expo-google-fonts/*'
+    groups:
+      test-tooling:
+        patterns: ['jest', 'jest-expo', '@testing-library/*', '@types/jest']
+    commit-message:
+      prefix: 'chore(deps)'
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    commit-message:
+      prefix: 'chore(ci)'

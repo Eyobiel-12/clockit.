@@ -1,0 +1,50 @@
+/* Correcties — naar Corrections.dc.html */
+.app .cor-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 22px; align-items: start; }
+.app .req-list { list-style: none; }
+.app .req {
+  display: flex; gap: 14px; align-items: center; width: 100%; text-align: left;
+  padding: 16px; border-radius: 16px; margin-bottom: 8px; border: 1.5px solid transparent;
+  background: transparent; font: inherit; color: inherit; cursor: pointer;
+}
+.app .req:hover { background: var(--bg); }
+.app .req.on { border-color: var(--deep); background: var(--mintl); }
+.app .req-main { min-width: 0; }
+.app .req small { display: block; color: var(--mute); }
+.app .req .rr { margin-left: auto; text-align: right; flex: none; }
+.app .empty { padding: 12px 4px; }
+
+.app .cor-type { margin: -8px 0 4px; }
+.app .cmp { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 18px 0; }
+.app .cmp > div { border-radius: 16px; padding: 18px; }
+.app .cmp .old { background: #FBE3E3; }
+.app .cmp .new { background: #DDF3E7; }
+.app .cmp small { font-weight: 700; color: var(--mute); display: block; }
+.app .cmp b { display: block; font-family: var(--display); font-size: 28px; line-height: 1.2; }
+.app .cmp .none { color: var(--mute); margin-top: 6px; }
+.app .msg { background: var(--bg); border-radius: 16px; padding: 16px; margin: 14px 0; }
+.app .msg small { color: var(--mute); }
+.app h4 { font-family: var(--display); font-size: 16px; margin-top: 18px; margin-bottom: 8px; }
+.app .log { list-style: none; border-left: 2px solid var(--line); margin-left: 6px; padding-left: 18px; }
+.app .log li { position: relative; padding: 6px 0; font-size: 14px; }
+.app .log li::before {
+  content: ""; position: absolute; left: -24px; top: 12px; width: 10px; height: 10px; border-radius: 50%; background: var(--deep);
+}
+.app .log small { color: var(--mute); }
+.app textarea.in { resize: vertical; min-height: 48px; }
+.app .acts2 { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+.app .btn.r { background: #fff; color: #B03030; box-shadow: inset 0 0 0 1.5px #F0C4C4; }
+.app .btn.r:hover { background: #FDF1F1; }
+
+.app .edit-times { border: 1.5px solid var(--line); border-radius: 16px; padding: 16px; margin-top: 18px; }
+.app .edit-times legend { font-weight: 800; padding: 0 6px; }
+.app .three { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 12px; }
+.app .edit-times .field { margin-bottom: 8px; }
+.app .edit-times .help { font-size: 13px; color: var(--mute); }
+
+@media (max-width: 1100px) {
+  .app .cor-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .app .cmp, .app .three { grid-template-columns: 1fr; }
+  .app .cmp b { font-size: 24px; }
+}

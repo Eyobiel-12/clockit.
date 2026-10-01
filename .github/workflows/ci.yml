@@ -1,0 +1,235 @@
+name: CI
+
+# Draait op elke pull request en op elke push naar main/Development.
+# Elk onderdeel (API, website, app) heeft zijn eigen job, zodat je in één oogopslag
+# ziet waar iets stukloopt en de jobs parallel kunnen draaien.
+on:
+  pull_request:
+  push:
+    branches: [main, Development]
+
+# Een nieuwe push op dezelfde branch stopt de vorige run: scheelt wachttijd en minuten.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: '22'
+
+jobs:
+  backend:
+    name: API (lint, typecheck, unit tests)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Pakketten installeren
+        working-directory: backend
+        run: npm ci
+
+      - name: Lint
+        working-directory: backend
+        run: npm run lint
+
+      - name: Typecheck
+        working-directory: backend
+        run: npm run typecheck
+
+      - name: Unit tests met dekking
+        working-directory: backend
+        run: npm run test:coverage
+
+      - name: Dekking naar Codecov
+        uses: codecov/codecov-action@v7
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: backend/coverage/lcov.info
+          flags: backend
+          name: backend
+          # Een hapering bij Codecov mag de build niet laten falen; de drempel van
+          # 80% wordt al lokaal in vitest.config.ts afgedwongen.
+          fail_ci_if_error: false
+
+      - name: Build
+        working-directory: backend
+        run: npm run build
+
+  backend-integration:
+    name: API (integratietests met MySQL)
+    runs-on: ubuntu-latest
+
+    # Dezelfde MySQL-versie als in docker-compose.yml, zodat we testen wat we draaien.
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: rootclockit
+          TZ: UTC
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -prootclockit --silent"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+
+    env:
+      DB_HOST: 127.0.0.1
+      DB_PORT: '3306'
+      DB_USER: root
+      DB_PASSWORD: rootclockit
+      DB_NAME: clockit_test
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Pakketten installeren
+        working-directory: backend
+        run: npm ci
+
+      # GitHub wacht zelf tot de health-check van de service slaagt, en
+      # globalSetup.ts probeert het daarna nog een paar keer opnieuw.
+      - name: Integratietests
+        working-directory: backend
+        run: npm run test:integration
+
+  frontend:
+    name: Website (lint, typecheck, tests, build)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Pakketten installeren
+        working-directory: frontend
+        run: npm ci
+
+      - name: Lint
+        working-directory: frontend
+        run: npm run lint
+
+      - name: Typecheck
+        working-directory: frontend
+        run: npm run typecheck
+
+      - name: Tests met dekking
+        working-directory: frontend
+        run: npm run test:coverage
+
+      - name: Dekking naar Codecov
+        uses: codecov/codecov-action@v7
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: frontend/coverage/lcov.info
+          flags: frontend
+          name: frontend
+          fail_ci_if_error: false
+
+      - name: Build
+        working-directory: frontend
+        run: npm run build
+
+      - name: Bouwresultaat bewaren
+        uses: actions/upload-artifact@v7
+        with:
+          name: website-dist
+          path: frontend/dist
+          retention-days: 7
+
+  mobile:
+    name: App (lint, typecheck, tests)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: mobile/package-lock.json
+
+      - name: Pakketten installeren
+        working-directory: mobile
+        run: npm ci
+
+      - name: Lint
+        working-directory: mobile
+        run: npm run lint
+
+      - name: Typecheck
+        working-directory: mobile
+        run: npm run typecheck
+
+      - name: Tests met dekking
+        working-directory: mobile
+        run: npm run test:coverage
+
+      - name: Dekking naar Codecov
+        uses: codecov/codecov-action@v7
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: mobile/coverage/lcov.info
+          flags: mobile
+          name: mobile
+          fail_ci_if_error: false
+
+  docker:
+    name: Docker-images bouwen
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: docker/setup-buildx-action@v4
+
+      # Alleen bouwen, niet publiceren: dat doet release.yml na een merge naar main.
+      - name: API-image bouwen
+        uses: docker/build-push-action@v7
+        with:
+          context: ./backend
+          push: false
+          cache-from: type=gha,scope=api
+          cache-to: type=gha,mode=max,scope=api
+
+      - name: Website-image bouwen
+        uses: docker/build-push-action@v7
+        with:
+          context: ./frontend
+          push: false
+          cache-from: type=gha,scope=web
+          cache-to: type=gha,mode=max,scope=web
+
+  # Eén check om in de branch protection van main te verplichten.
+  ci-ok:
+    name: CI geslaagd
+    if: always()
+    needs: [backend, backend-integration, frontend, mobile, docker]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mislukte jobs melden
+        if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
+        run: |
+          echo "Een of meer jobs zijn niet geslaagd." >&2
+          exit 1
+
+      - name: Klaar
+        run: echo "Alle jobs geslaagd."
