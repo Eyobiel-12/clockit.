@@ -122,6 +122,8 @@ Allemaal uitvoeren in de hoofdmap van het project.
 | `npm run stop` | Docker stoppen (gegevens blijven bewaard) |
 | `npm run logs` | Meekijken met de API-logs |
 | `npm run reset-db` | Database wissen en opnieuw vullen met de demodata |
+| `npm run verify` | Alle controles van CI in één keer: lint, types en tests met dekking |
+| `npm test` | Alle tests van de API, de website en de app |
 
 ## Problemen oplossen
 
@@ -239,6 +241,42 @@ npx expo start
 - De app zoekt de API automatisch op het netwerkadres van je computer, poort 4000.
 - Een vast adres instellen kan in `mobile/.env.local`: `EXPO_PUBLIC_API_URL=http://192.168.x.x:4000/api`.
 - In de browser testen kan ook: `npx expo start --web` (zonder kaart; die werkt alleen op de telefoon).
+
+### Testen en de pijplijn
+
+Elke pull request draait automatisch dezelfde controles die jij lokaal kunt draaien. Alles in één keer, vanuit de hoofdmap:
+
+```bash
+npm run verify
+```
+
+Of per onderdeel (`backend/`, `frontend/` of `mobile/`):
+
+| Commando | Wat het doet |
+| --- | --- |
+| `npm run lint` | Stijl- en kwaliteitscontrole (Biome in de API en de website, ESLint in de app) |
+| `npm run typecheck` | TypeScript controleert de types zonder te bouwen |
+| `npm test` | De tests |
+| `npm run test:coverage` | De tests plus een dekkingsrapport; faalt onder **80%** |
+
+De API heeft daarnaast integratietests die met een echte MySQL praten:
+
+```bash
+cd backend
+npm run test:integration
+```
+
+#### Wat er in GitHub draait
+
+| Workflow | Wanneer | Wat |
+| --- | --- | --- |
+| `ci.yml` | elke pull request en push naar `main`/`Development` | lint, types, tests met dekking, integratietests tegen MySQL, en de Docker-images bouwen |
+| `release.yml` | merge naar `main` of een tag `v1.2.3` | publiceert de images van de API en de website naar ghcr.io |
+| `mobile-release.yml` | handmatig of bij een tag `v1.2.3` | bouwt de app via EAS Build in de cloud |
+
+De dekking gaat per onderdeel naar [Codecov](https://app.codecov.io). Daarvoor zijn twee geheimen nodig onder **Settings › Secrets and variables › Actions**: `CODECOV_TOKEN` en, voor de app-builds, `EXPO_TOKEN`.
+
+Wil je meewerken? Lees [CONTRIBUTING.md](CONTRIBUTING.md). Het werk dat nog openstaat staat in [docs/BACKLOG.md](docs/BACKLOG.md).
 
 ## Licentie
 

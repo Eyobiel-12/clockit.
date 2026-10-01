@@ -2,36 +2,7 @@ import { Platform, Pressable, StyleSheet, TextInput, View, type StyleProp, type 
 import DateTimePicker, { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import { Txt } from './ui';
 import { colors, fonts, radius } from './theme';
-
-type Mode = 'date' | 'time';
-
-const pad = (n: number) => String(n).padStart(2, '0');
-
-/** '2026-09-29' / '19:00' ↔ Date (telefoontijd). */
-function toDate(mode: Mode, value: string): Date {
-  const now = new Date();
-  if (mode === 'date' && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
-    const [y, m, d] = value.split('-').map(Number);
-    return new Date(y, m - 1, d, 12, 0);
-  }
-  if (mode === 'time' && /^\d{2}:\d{2}$/.test(value)) {
-    const [h, min] = value.split(':').map(Number);
-    return new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, min);
-  }
-  return now;
-}
-
-function fromDate(mode: Mode, d: Date): string {
-  return mode === 'date'
-    ? `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
-    : `${pad(d.getHours())}:${pad(d.getMinutes())}`;
-}
-
-function display(mode: Mode, value: string): string {
-  if (!value) return mode === 'date' ? 'Kies een datum' : 'Kies een tijd';
-  if (mode === 'time') return value;
-  return toDate('date', value).toLocaleDateString('nl-NL', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
-}
+import { type DateTimeMode as Mode, display, fromDate, toDate } from '../lib/format';
 
 type Props = {
   label: string;

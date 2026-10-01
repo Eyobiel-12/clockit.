@@ -7,15 +7,11 @@ import { api, ApiError, type ClockStatus, type Shift } from '../lib/api';
 import { useAuth } from '../lib/auth';
 import { getPosition, LocationError } from '../lib/location';
 import { useApi } from '../lib/useApi';
+import { elapsed } from '../lib/format';
 
 const correctionLabel = { pending: 'aangevraagd', approved: 'goedgekeurd', rejected: 'afgewezen' } as const;
 
 type Result = { ok: boolean; title: string; text: string; settings?: boolean };
-
-function elapsed(fromIso: string, now: number) {
-  const mins = Math.max(0, Math.floor((now - new Date(fromIso).getTime()) / 60000));
-  return `${Math.floor(mins / 60)}:${String(mins % 60).padStart(2, '0')}`;
-}
 
 /** In- en uitklokken met GPS. `showHistory` toont ook de laatste diensten (voor het medewerkerscherm). */
 export function ClockCard({ showHistory, onChange }: { showHistory?: boolean; onChange?: () => void }) {

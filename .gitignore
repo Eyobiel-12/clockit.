@@ -25,3 +25,9 @@ Thumbs.db
 
 # TypeScript build cache
 *.tsbuildinfo
+
+# Testdekking (wordt per run opnieuw gemaakt en naar Codecov gestuurd)
+coverage/
+
+# Expo
+.expo/

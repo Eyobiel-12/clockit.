@@ -3,10 +3,11 @@ import { z } from 'zod';
 import type { ResultSetHeader, RowDataPacket } from 'mysql2';
 import { pool } from '../db.js';
 import { requireRole } from '../auth.js';
-import { initials } from '../queries.js';
+import { initials } from '../summary.js';
+import { toSpan } from '../shift.js';
 import {
   DATE_RE, TIME_RE, formatDay, formatDate, formatDayShort, formatDistance, formatMinutes, formatTime,
-  fromLocal, localParts, timeAgo,
+  localParts, timeAgo,
 } from '../time.js';
 
 /** Correcties (Corrections.dc.html): aanvragen om een tijd aan te passen, en het besluit daarover. */
@@ -21,8 +22,6 @@ export const TYPE_LABEL: Record<CorrectionType, string> = {
   wrong_time: 'Tijd klopt niet',
   other: 'Overig',
 };
-
-const MAX_SHIFT_MIN = 16 * 60;
 
 type Row = RowDataPacket & {
   id: number; restaurant_id: number; user_id: number; shift_id: number | null; type: CorrectionType; reason: string | null;
@@ -127,17 +126,6 @@ function present(c: Row, now = new Date()) {
       clockOut: baseOut ? localParts(baseOut).time : '',
     },
   };
-}
-
-/** Lokale datum + tijden → UTC. Uit vóór in betekent: over middernacht heen, dus de volgende dag. */
-function toSpan(date: string, clockIn: string, clockOut: string) {
-  const inAt = fromLocal(date, clockIn);
-  let outAt = fromLocal(date, clockOut);
-  if (outAt <= inAt) outAt = new Date(outAt.getTime() + 86_400_000);
-  const mins = (outAt.getTime() - inAt.getTime()) / 60000;
-  if (mins > MAX_SHIFT_MIN) throw new Error('Een dienst kan niet langer dan 16 uur zijn.');
-  if (outAt.getTime() > Date.now() + 5 * 60000) throw new Error('De uitkloktijd ligt in de toekomst.');
-  return { inAt, outAt };
 }
 
 const timesSchema = z.object({

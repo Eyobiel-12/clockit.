@@ -2,7 +2,8 @@ import { Router } from 'express';
 import type { RowDataPacket } from 'mysql2';
 import { pool } from '../db.js';
 import { requireRole } from '../auth.js';
-import { initials, summarize, weekShifts } from '../queries.js';
+import { weekShifts } from '../queries.js';
+import { initials, summarize } from '../summary.js';
 import { formatDay, formatDistance, formatMinutes, formatTime, localMidnight, weekdayIndex } from '../time.js';
 
 export const dashboardRouter = Router();

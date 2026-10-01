@@ -8,11 +8,9 @@ import { Button, ErrorText, H1, Muted, Txt } from '../components/ui';
 import { colors, fonts, radius } from '../components/theme';
 import { api } from '../lib/api';
 import { useAuth } from '../lib/auth';
+import { today } from '../lib/format';
 
 type Type = 'forgot_clock_out' | 'wrong_time' | 'forgot_clock_in';
-
-const pad = (n: number) => String(n).padStart(2, '0');
-const today = () => { const d = new Date(); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; };
 
 /**
  * Correctie aanvragen door een medewerker. Met een dienst (shiftId): uitklokken vergeten of tijd klopt niet.
@@ -68,7 +66,7 @@ export default function CorrectieAanvragen() {
       <Screen standalone contentStyle={{ gap: 16, justifyContent: 'center' }}>
         <View style={styles.stamp}><Txt weight="display" style={styles.stampText}>VERSTUURD</Txt></View>
         <H1>Je aanvraag is verstuurd</H1>
-        <Muted>Je leidinggevende bekijkt hem. Je ziet de status bij je diensten en onder "Mijn aanvragen".</Muted>
+        <Muted>Je leidinggevende bekijkt hem. Je ziet de status bij je diensten en onder &ldquo;Mijn aanvragen&rdquo;.</Muted>
         <Button title="Terug" onPress={back} full />
       </Screen>
     );

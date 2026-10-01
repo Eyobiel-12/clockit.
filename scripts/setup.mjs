@@ -30,4 +30,8 @@ for (const [dir, label] of [['frontend', 'website'], ['backend', 'API'], ['mobil
   }
 }
 
-console.log(`\n${c.green}${c.bold}✔ Klaar!${c.reset} Open Docker Desktop en start alles met: ${c.bold}npm start${c.reset}\n`);
+const dockerOk = spawnSync('docker', ['--version'], { stdio: 'ignore', shell: isWin }).status === 0;
+const startHint = dockerOk
+  ? `Open Docker Desktop en start alles met: ${c.bold}npm start${c.reset}`
+  : `Start zonder Docker met: ${c.bold}npm run start:local${c.reset} (of installeer Docker Desktop voor ${c.bold}npm start${c.reset})`;
+console.log(`\n${c.green}${c.bold}✔ Klaar!${c.reset} ${startHint}\n`);

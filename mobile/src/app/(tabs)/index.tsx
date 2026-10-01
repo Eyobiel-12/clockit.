@@ -7,19 +7,7 @@ import { colors, pills } from '../../components/theme';
 import type { DashboardData } from '../../lib/api';
 import { useAuth } from '../../lib/auth';
 import { useApi } from '../../lib/useApi';
-
-function greeting(date: Date) {
-  const h = date.getHours();
-  if (h < 6) return 'Goedenacht';
-  if (h < 12) return 'Goedemorgen';
-  if (h < 18) return 'Goedemiddag';
-  return 'Goedenavond';
-}
-
-function formatDate(date: Date) {
-  const s = date.toLocaleDateString('nl-NL', { weekday: 'long', day: 'numeric', month: 'long' });
-  return s.charAt(0).toUpperCase() + s.slice(1);
-}
+import { formatLongDate, greeting } from '../../lib/format';
 
 const alertStyle = {
   error: { icon: '!', ...pills.red },
@@ -34,7 +22,7 @@ export default function Overzicht() {
 
   return (
     <Screen refreshing={refreshing} onRefresh={pullToRefresh}>
-      <Muted>{formatDate(now)}</Muted>
+      <Muted>{formatLongDate(now)}</Muted>
       <H1 style={{ marginBottom: 16 }}>{greeting(now)}, {me?.user.firstName}</H1>
 
       <View style={styles.actions}>

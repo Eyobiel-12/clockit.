@@ -2,21 +2,9 @@ import { Link } from 'react-router-dom';
 import type { DashboardData } from '../api';
 import { useAuth } from '../auth';
 import { useApi } from '../useApi';
+import { formatLongDate, greeting } from '../lib/format';
 import '../styles/dashboard.css';
 import { useTitle } from '../useTitle';
-
-function greeting(date: Date) {
-  const h = date.getHours();
-  if (h < 6) return 'Goedenacht';
-  if (h < 12) return 'Goedemorgen';
-  if (h < 18) return 'Goedemiddag';
-  return 'Goedenavond';
-}
-
-function formatDate(date: Date) {
-  const s = date.toLocaleDateString('nl-NL', { weekday: 'long', day: 'numeric', month: 'long' });
-  return s.charAt(0).toUpperCase() + s.slice(1);
-}
 
 const alertIcon = { error: '!', warning: '~', info: '+' } as const;
 
@@ -30,7 +18,7 @@ export default function Dashboard() {
     <>
       <div className="head">
         <div>
-          <p>{formatDate(now)}</p>
+          <p>{formatLongDate(now)}</p>
           <h1>{greeting(now)}, {me?.user.firstName}</h1>
         </div>
         <div className="acts">

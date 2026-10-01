@@ -4,7 +4,8 @@ import { z } from 'zod';
 import type { ResultSetHeader, RowDataPacket } from 'mysql2';
 import { pool } from '../db.js';
 import { clearSession, isMobile, requireAuth, setSession, type Role } from '../auth.js';
-import { initials, restaurantSummary, uniqueInviteCode } from '../queries.js';
+import { restaurantSummary, uniqueInviteCode } from '../queries.js';
+import { initials } from '../summary.js';
 
 export const authRouter = Router();
 

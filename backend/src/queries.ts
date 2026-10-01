@@ -1,29 +1,8 @@
 import type { RowDataPacket } from 'mysql2';
 import { randomInt } from 'node:crypto';
 import { pool } from './db.js';
-import { localMidnight, startOfWeek, weekdayIndex } from './time.js';
-
-/** Boven deze onnauwkeurigheid weigeren we inklokken (bv. iPhone met "Exacte locatie" uit). */
-export const MAX_ACCURACY_M = 150;
-
-/** Afstand in meters tussen twee coördinaten (haversine). */
-export function distanceM(lat1: number, lng1: number, lat2: number, lng2: number): number {
-  const R = 6_371_000;
-  const rad = (d: number) => (d * Math.PI) / 180;
-  const dLat = rad(lat2 - lat1);
-  const dLng = rad(lng2 - lng1);
-  const a = Math.sin(dLat / 2) ** 2 + Math.cos(rad(lat1)) * Math.cos(rad(lat2)) * Math.sin(dLng / 2) ** 2;
-  return Math.round(2 * R * Math.asin(Math.sqrt(a)));
-}
-
-export type ShiftRow = RowDataPacket & {
-  id: number;
-  user_id: number;
-  clock_in_at: Date;
-  clock_out_at: Date | null;
-  distance_m: number;
-  accuracy_m: number;
-};
+import { startOfWeek } from './time.js';
+import type { ShiftRow } from './summary.js';
 
 /** Diensten die deze week zijn begonnen, plus diensten die nog open staan. */
 export async function weekShifts(restaurantId: number, now = new Date()) {
@@ -36,26 +15,6 @@ export async function weekShifts(restaurantId: number, now = new Date()) {
     [restaurantId, weekStart],
   );
   return { rows, weekStart };
-}
-
-/** Telt gewerkte minuten per medewerker, per weekdag en voor vandaag (op basis van de inklokdag). */
-export function summarize(rows: ShiftRow[], weekStart: Date, now = new Date()) {
-  const todayStart = localMidnight(now);
-  const perUser = new Map<number, number>();
-  const perDay = [0, 0, 0, 0, 0, 0, 0];
-  let today = 0;
-
-  for (const s of rows) {
-    const start = s.clock_in_at < weekStart ? weekStart : s.clock_in_at;
-    const end = s.clock_out_at ?? now;
-    const mins = Math.max(0, (end.getTime() - start.getTime()) / 60000);
-    perUser.set(s.user_id, (perUser.get(s.user_id) ?? 0) + mins);
-    perDay[weekdayIndex(start)] += mins;
-    if (start >= todayStart) today += mins;
-  }
-
-  const week = perDay.reduce((a, b) => a + b, 0);
-  return { perUser, perDay, today, week };
 }
 
 type CountRow = RowDataPacket & { n: number };
@@ -94,11 +53,4 @@ export async function uniqueInviteCode(): Promise<string> {
     if (rows.length === 0) return code;
   }
   throw new Error('Kon geen unieke uitnodigingscode maken');
-}
-
-/** "Sanne" + "de Vries" → "SV", "Fatima" + "El Amrani" → "FE": tussenvoegsels (kleine letter) tellen niet mee. */
-export function initials(first: string, last: string) {
-  const words = last.trim().split(/\s+/);
-  const main = words.find((w) => /^\p{Lu}/u.test(w)) ?? words[words.length - 1] ?? '';
-  return `${first.trim()[0] ?? ''}${main[0] ?? ''}`.toUpperCase();
 }

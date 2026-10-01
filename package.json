@@ -6,9 +6,16 @@
   "scripts": {
     "setup": "node scripts/setup.mjs",
     "start": "node scripts/start.mjs",
+    "start:local": "node scripts/start-local.mjs",
+    "stop:local": "node scripts/stop-local.mjs",
     "stop": "docker compose down",
     "logs": "docker compose logs -f api",
-    "reset-db": "docker compose down -v && docker compose up -d"
+    "reset-db": "docker compose down -v && docker compose up -d",
+    "test": "npm --prefix backend test && npm --prefix frontend test && npm --prefix mobile test",
+    "test:coverage": "npm --prefix backend run test:coverage && npm --prefix frontend run test:coverage && npm --prefix mobile run test:coverage",
+    "lint": "npm --prefix backend run lint && npm --prefix frontend run lint && npm --prefix mobile run lint",
+    "typecheck": "npm --prefix backend run typecheck && npm --prefix frontend run typecheck && npm --prefix mobile run typecheck",
+    "verify": "npm run lint && npm run typecheck && npm run test:coverage"
   },
   "engines": {
     "node": ">=20"

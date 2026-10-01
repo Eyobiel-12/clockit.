@@ -1,0 +1,40 @@
+name: Functie voorstellen
+description: Een idee voor iets nieuws
+labels: [enhancement]
+body:
+  - type: textarea
+    id: probleem
+    attributes:
+      label: Welk probleem lost dit op?
+      placeholder: Als eigenaar wil ik … zodat ik …
+    validations:
+      required: true
+
+  - type: textarea
+    id: voorstel
+    attributes:
+      label: Wat stel je voor?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: onderdeel
+    attributes:
+      label: Welk onderdeel raakt dit?
+      multiple: true
+      options:
+        - Website
+        - App
+        - API
+        - Database
+    validations:
+      required: true
+
+  - type: textarea
+    id: klaar
+    attributes:
+      label: Wanneer is het klaar?
+      description: Noem de punten waaraan je kunt zien dat het werkt.
+      value: |
+        - [ ]
+        - [ ]

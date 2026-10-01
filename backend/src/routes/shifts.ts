@@ -2,7 +2,8 @@ import { Router } from 'express';
 import { z } from 'zod';
 import type { ResultSetHeader, RowDataPacket } from 'mysql2';
 import { pool } from '../db.js';
-import { MAX_ACCURACY_M, distanceM, type ShiftRow } from '../queries.js';
+import { MAX_ACCURACY_M, distanceM } from '../geo.js';
+import type { ShiftRow } from '../summary.js';
 import { formatDate, formatDay, formatDistance, formatMinutes, formatTime, localMidnight, localParts, startOfWeek } from '../time.js';
 import { TYPE_LABEL } from './corrections.js';
 

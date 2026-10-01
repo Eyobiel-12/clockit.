@@ -1,0 +1,70 @@
+name: Bug melden
+description: Iets werkt niet zoals het hoort
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Bedankt voor de melding. Hoe concreter, hoe sneller het op te lossen is.
+
+  - type: dropdown
+    id: onderdeel
+    attributes:
+      label: Waar gebeurt het?
+      options:
+        - Website (localhost:8090)
+        - App (Expo Go of een build)
+        - API (localhost:4000)
+        - Database
+        - CI/CD
+        - Weet ik niet
+    validations:
+      required: true
+
+  - type: textarea
+    id: wat-gebeurt-er
+    attributes:
+      label: Wat gebeurt er?
+      placeholder: Bij het inklokken krijg ik "Buiten zone", terwijl ik in de zaak sta.
+    validations:
+      required: true
+
+  - type: textarea
+    id: verwacht
+    attributes:
+      label: Wat had je verwacht?
+    validations:
+      required: true
+
+  - type: textarea
+    id: stappen
+    attributes:
+      label: Hoe kun je het nadoen?
+      value: |
+        1. Inloggen als …
+        2. Naar … gaan
+        3. Op … tikken
+    validations:
+      required: true
+
+  - type: input
+    id: account
+    attributes:
+      label: Met welk account?
+      placeholder: sanne@dekade.nl (eigenaar)
+
+  - type: textarea
+    id: omgeving
+    attributes:
+      label: Omgeving
+      value: |
+        - Besturingssysteem:
+        - Browser of telefoon:
+        - Gestart met: npm start / npm run start:local
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Meldingen uit de terminal of console
+      render: shell

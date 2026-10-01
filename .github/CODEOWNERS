@@ -1,0 +1,16 @@
+# Wie krijgt automatisch een review-verzoek bij welke bestanden.
+# Vul hier de GitHub-gebruikersnamen van het team in.
+# Let op: een gebruiker moet schrijfrechten op de repo hebben, anders wordt
+# hij stil overgeslagen.
+
+*                   @Eyobiel-12
+
+/backend/           @Eyobiel-12
+/frontend/          @Eyobiel-12
+/mobile/            @Eyobiel-12
+/db/                @Eyobiel-12
+
+# Wijzigingen aan de pijplijn raken iedereen, dus die wil je altijd nalopen.
+/.github/           @Eyobiel-12
+/docker-compose.yml @Eyobiel-12
+/codecov.yml        @Eyobiel-12

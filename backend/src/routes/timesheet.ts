@@ -2,7 +2,7 @@ import { Router, type Request } from 'express';
 import type { RowDataPacket } from 'mysql2';
 import { pool } from '../db.js';
 import { requireRole } from '../auth.js';
-import { initials } from '../queries.js';
+import { initials } from '../summary.js';
 import {
   DATE_RE, formatDay, formatDayMonth, formatDayShort, formatDate, formatDistance, formatMinutes, formatMonth,
   formatShortDay, formatTime, fromLocal, isoWeek, localMidnight, localParts, startOfMonth, startOfWeek,

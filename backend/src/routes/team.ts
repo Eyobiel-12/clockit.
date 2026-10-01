@@ -3,7 +3,8 @@ import { z } from 'zod';
 import type { RowDataPacket } from 'mysql2';
 import { pool } from '../db.js';
 import { requireRole, type Role } from '../auth.js';
-import { initials, summarize, uniqueInviteCode, weekShifts } from '../queries.js';
+import { uniqueInviteCode, weekShifts } from '../queries.js';
+import { initials, summarize } from '../summary.js';
 import { formatMinutes } from '../time.js';
 
 export const teamRouter = Router();
