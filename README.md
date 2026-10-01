@@ -276,7 +276,7 @@ npm run test:integration
 
 De dekking gaat per onderdeel naar [Codecov](https://app.codecov.io). Daarvoor zijn twee geheimen nodig onder **Settings › Secrets and variables › Actions**: `CODECOV_TOKEN` en, voor de app-builds, `EXPO_TOKEN`.
 
-Wil je meewerken? Lees [CONTRIBUTING.md](CONTRIBUTING.md). Het werk dat nog openstaat staat in [docs/BACKLOG.md](docs/BACKLOG.md).
+Wil je meewerken? Lees [CONTRIBUTING.md](CONTRIBUTING.md). Het werk dat nog openstaat staat in Linear: https://linear.app/clock-it
 
 ## Licentie
 
