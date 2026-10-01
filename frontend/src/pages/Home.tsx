@@ -1,12 +1,15 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import DemoTour from '../components/DemoTour';
+import { appSteps, dashboardSteps } from '../components/demoSteps';
 import '../styles/home.css';
 import { useTitle } from '../useTitle';
 
-const tickets = [
-  { id: '#041', name: 'Sanne', time: '08:58', distance: '12 m', accuracy: '±8 m', ok: true },
-  { id: '#042', name: 'Mehmet', time: '09:02', distance: '31 m', accuracy: '±14 m', ok: true },
-  { id: '#043', name: 'Joost', time: '09:05', distance: '2,4 km', accuracy: '±20 m', ok: false },
+const timecard = [
+  { day: 'Maandag', in: '16:02', out: '22:31', hours: '6:29' },
+  { day: 'Dinsdag', in: '15:58', out: '23:04', hours: '7:06' },
+  { day: 'Donderdag', in: '11:30', out: '17:45', hours: '6:15' },
+  { day: 'Vrijdag', in: '16:01', out: null, hours: null },
 ];
 
 const steps = [
@@ -30,10 +33,86 @@ const week = [
   { name: 'Fatima El Amrani', days: ['7:00', '—', '7:15', '7:00'], total: '21:15' },
 ];
 
+function TimecardContent() {
+  return (
+    <>
+      <span className="tc-stamp" aria-hidden="true">✓ Op locatie · 38 m</span>
+      <div className="tc-head">
+        <h2>Weekkaart</h2>
+        <span className="tc-week">wk 39 · 2026</span>
+      </div>
+      <div className="tc-meta">
+        <span>Naam <b>Sanne de Vries</b></span>
+        <span>Locatie <b>Brasserie Anker</b></span>
+      </div>
+      <table>
+        <caption className="sr-only">Gewerkte uren deze week</caption>
+        <thead>
+          <tr><th scope="col">Dag</th><th scope="col">In</th><th scope="col">Uit</th><th scope="col">Uren</th></tr>
+        </thead>
+        <tbody>
+          {timecard.map((r) => (
+            <tr key={r.day}>
+              <th scope="row">{r.day}</th>
+              <td>{r.in}</td>
+              <td className={r.out ? undefined : 'live'}>{r.out ?? '—'}</td>
+              <td className={r.hours ? undefined : 'live'}>{r.hours ?? 'bezig'}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <div className="tc-total">
+        <span>Totaal deze week</span>
+        <b>19:50</b>
+      </div>
+    </>
+  );
+}
+
 export default function Home() {
   useTitle();
   const [menuOpen, setMenuOpen] = useState(false);
   const closeMenu = () => setMenuOpen(false);
+  const [demo, setDemo] = useState<'dashboard' | 'app'>(() => (window.location.hash === '#demo-app' ? 'app' : 'dashboard'));
+
+  useEffect(() => {
+    if (window.location.hash === '#demo-app') document.getElementById('demo')?.scrollIntoView();
+  }, []);
+  const visualRef = useRef<HTMLDivElement>(null);
+
+  // Van papier naar digitaal: zodra je begint te scrollen scheurt de weekkaart, vliegen de stukken weg
+  // en popt de telefoon eruit. Dat speelt als één animatie af (klasse .popped); terug naar boven zet hem terug.
+  useEffect(() => {
+    const visual = visualRef.current;
+    if (!visual) return;
+    const pinned = window.matchMedia('(min-width: 1081px)');
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      let start: boolean;
+      let reset: boolean;
+      if (pinned.matches) {
+        start = window.scrollY > 10;
+        reset = window.scrollY < 4;
+      } else {
+        // Tablet/mobiel: de kaart staat lager, dus wachten tot hij goed in beeld is.
+        const top = visual.getBoundingClientRect().top;
+        start = top < window.innerHeight * 0.7;
+        reset = top > window.innerHeight * 0.9;
+      }
+      if (start) visual.classList.add('popped');
+      else if (reset) visual.classList.remove('popped');
+    };
+    const onScroll = () => { if (!frame) frame = requestAnimationFrame(update); };
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      cancelAnimationFrame(frame);
+    };
+  }, []);
 
   return (
     <div className="home">
@@ -57,42 +136,44 @@ export default function Home() {
           <ul>
             <li><a href="#hoe" onClick={closeMenu}>Hoe het werkt</a></li>
             <li><a href="#functies" onClick={closeMenu}>Functies</a></li>
+            <li><a href="#demo" onClick={closeMenu}>Demo</a></li>
             <li><a href="#prijzen" onClick={closeMenu}>Prijzen</a></li>
             <li><Link to="/login">Inloggen</Link></li>
           </ul>
-          <Link className="btn" to="/registreren">Gratis beginnen</Link>
+          <Link className="btn" to="/registreren">Gratis starten</Link>
         </div>
       </nav>
 
       <main id="main">
+        <div className="hero-scene">
         <header className="hero">
-          <div>
-            <h1>Je team klokt in op de werkvloer. Niet vanaf de bank.</h1>
-            <p className="lead">Klokit controleert met GPS of je medewerkers echt in het restaurant zijn als ze inklokken. Geen prikklok, geen papieren lijst — gewoon hun eigen telefoon.</p>
+          <div className="hero-copy">
+            <h1>Uren die kloppen. Zonder prikklok aan de muur.</h1>
+            <p className="lead">Je team klokt in met de eigen telefoon. Klokit checkt of iemand echt in het restaurant staat, en jij hebt de uren meteen klaar voor de loonadministratie.</p>
             <div className="cta">
-              <Link className="btn" to="/registreren">Gratis beginnen</Link>
+              <Link className="btn" to="/registreren">Gratis starten</Link>
               <a className="btn ghost" href="#hoe">Bekijk hoe het werkt</a>
             </div>
+            <p className="fine">Gratis tot 5 medewerkers. Geen hardware, geen papier.</p>
           </div>
 
-          <div className="railwrap">
-            <div className="rail" aria-hidden="true" />
-            <ul className="tickets" aria-label="Voorbeelden van inklokbonnetjes">
-              {tickets.map((t, i) => (
-                <li key={t.id} className={`ticket t${i + 1}`}>
-                  <h2 className="ticket-title">{t.id} INKLOKKEN</h2>
-                  <dl>
-                    <div className="row"><dt>{t.name}</dt><dd>{t.time}</dd></div>
-                    <div className="row"><dt>Afstand</dt><dd>{t.distance}</dd></div>
-                    <div className="row"><dt>Nauwk.</dt><dd>{t.accuracy}</dd></div>
-                  </dl>
-                  <span className={`stamp${t.ok ? '' : ' no'}`}>{t.ok ? 'GELUKT' : 'BUITEN ZONE'}</span>
-                </li>
-              ))}
-            </ul>
-            <p className="note">Elke punch krijgt een servertijd, afstand en GPS-nauwkeurigheid. Wie buiten de straal staat, kan niet inklokken en ziet direct waarom.</p>
+          <div className="hero-visual" ref={visualRef}>
+            <video
+              className="hero-phone"
+              src="/clock-it-telefoon-transparant.webm"
+              autoPlay
+              muted
+              loop
+              playsInline
+              aria-label="Klokit-app op een telefoon: een medewerker klokt in op locatie"
+            />
+            <figure className="timecard" aria-label="Voorbeeld van een weekkaart">
+              <div className="tc-piece top"><div className="tc-sheet"><TimecardContent /></div></div>
+              <div className="tc-piece bottom" aria-hidden="true"><div className="tc-sheet"><TimecardContent /></div></div>
+            </figure>
           </div>
         </header>
+        </div>
 
         <section className="paper" id="hoe" aria-labelledby="hoe-titel">
           <h2 id="hoe-titel">In vijf minuten draaien</h2>
@@ -141,6 +222,26 @@ export default function Home() {
               </div>
               <figcaption className="flag sheet-note">* Uitklokken vergeten — correctie wacht op goedkeuring</figcaption>
             </figure>
+          </div>
+        </section>
+
+        <section className="demo-sec" id="demo" aria-labelledby="demo-titel">
+          <p className="eyebrow">Interactieve demo</p>
+          <h2 id="demo-titel">Klik door de interactieve demo.</h2>
+          <div className="demo-tabs" role="tablist" aria-label="Kies een demo">
+            <button type="button" role="tab" id="demo-tab-dashboard" aria-selected={demo === 'dashboard'} aria-controls="demo-panel" onClick={() => setDemo('dashboard')}>
+              Eigenaar · dashboard
+            </button>
+            <button type="button" role="tab" id="demo-tab-app" aria-selected={demo === 'app'} aria-controls="demo-panel" onClick={() => setDemo('app')}>
+              Medewerker · app
+            </button>
+          </div>
+          <div className="demo-panel" id="demo-panel" role="tabpanel" aria-labelledby={`demo-tab-${demo}`}>
+            {demo === 'dashboard' ? (
+              <DemoTour key="dashboard" steps={dashboardSteps} variant="desktop" link="/#demo" />
+            ) : (
+              <DemoTour key="app" steps={appSteps} variant="phone" link="/#demo-app" />
+            )}
           </div>
         </section>
 

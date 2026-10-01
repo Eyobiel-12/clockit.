@@ -1,4 +1,5 @@
-// Start alles in één keer: database, API en website (Docker) en daarna de Expo-app.
+// Start alles in één keer: database en API (Docker), de website (Vite, ververst direct bij elke wijziging)
+// en de Expo-app.
 // Gebruik: `npm start` of `.\start` in C:\Users\serha\Develop\klolit
 import { spawn, spawnSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
@@ -9,6 +10,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const mobile = join(root, 'mobile');
+const frontend = join(root, 'frontend');
 const isWin = process.platform === 'win32';
 const WEB = 'http://localhost:8090';
 const API = 'http://localhost:4000/api/health';
@@ -66,12 +68,32 @@ function lanIp() {
 step('1/4  Docker controleren');
 await ensureDocker();
 
-step('2/4  Database, API en website starten');
+step('2/4  Database en API starten');
+// Een oude website-container van vóór de Vite-opzet houdt poort 8090 bezet; die ruimen we op.
+spawnSync('docker', ['compose', 'rm', '-sf', 'web'], { cwd: root, stdio: 'ignore', shell: isWin });
 if (!run('docker', ['compose', 'up', '-d', '--build'])) fail('docker compose up is mislukt (zie de melding hierboven).');
 
 step('3/4  Wachten tot de API klaar is');
 if (!(await waitFor(API, 120))) fail(`De API reageert niet op ${API}. Bekijk de logs met: docker compose logs api`);
 ok('API is bereikbaar');
+
+if (!existsSync(join(frontend, 'node_modules'))) {
+  console.log('Eerste keer: pakketten voor de website installeren…');
+  if (!run('npm', ['install'], frontend)) fail('npm install in frontend/ is mislukt.');
+}
+
+// Website met Vite: elke wijziging in frontend/ staat meteen in de browser, zonder herstarten.
+// Alleen foutmeldingen komen in deze terminal; de rest is voor de Expo-QR-code.
+const vite = spawn(process.execPath, [join(frontend, 'node_modules', 'vite', 'bin', 'vite.js'), '--clearScreen', 'false'], {
+  cwd: frontend,
+  stdio: ['ignore', 'ignore', 'inherit'],
+});
+vite.on('exit', (code) => {
+  if (code) fail('De website (Vite) is gestopt. Draait er al iets op poort 8090? Stop dat en probeer opnieuw.');
+});
+process.on('exit', () => vite.kill());
+if (!(await waitFor(WEB, 30))) fail(`De website reageert niet op ${WEB}.`);
+ok('Website draait (wijzigingen zijn direct zichtbaar)');
 
 if (!existsSync(join(mobile, 'node_modules'))) {
   console.log('Eerste keer: pakketten voor de app installeren…');
@@ -81,11 +103,11 @@ if (!existsSync(join(mobile, 'node_modules'))) {
 const ip = lanIp();
 console.log(`
 ${c.bold}Klokit draait${c.reset}
-  Website      ${WEB}
+  Website      ${WEB}  (ververst vanzelf bij wijzigingen)
   API          http://localhost:4000/api  (telefoon: http://${ip}:4000/api)
   Database     localhost:3307  (clockit / clockit)
   Inloggen     sanne@dekade.nl / wachtwoord12
-${c.dim}  Stoppen: Ctrl+C stopt de app-server; "npm run stop" stopt ook Docker.${c.reset}`);
+${c.dim}  Stoppen: Ctrl+C stopt de website en de app-server; "npm run stop" stopt ook Docker.${c.reset}`);
 
 // Website openen in de browser (overslaan met KLOKIT_NO_BROWSER=1).
 if (isWin && !process.env.KLOKIT_NO_BROWSER) spawn('cmd', ['/c', 'start', '', WEB], { stdio: 'ignore', detached: true }).unref();
@@ -124,7 +146,10 @@ if (status === 'metro') {
   ok(`De Expo-app draait al (poort ${port}), in een ander venster. Scan deze QR-code:`);
   await printExpoQr(port);
   console.log(`${c.dim}  Nieuwe pakketten of instellingen? Stop dat venster (Ctrl+C) en start opnieuw met npm start.${c.reset}`);
-  process.exit(0);
+  // Niet afsluiten: dit venster houdt de website draaiende. Ctrl+C stopt hem.
+  console.log(`${c.dim}  Laat dit venster open voor de website; Ctrl+C stopt hem.${c.reset}`);
+  process.on('SIGINT', () => process.exit(0));
+  await new Promise(() => {});
 }
 if (status === 'busy') {
   while ((await metroStatus(port)) !== 'free' && port < 8099) port++;

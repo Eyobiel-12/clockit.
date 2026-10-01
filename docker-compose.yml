@@ -38,8 +38,11 @@ services:
       db:
         condition: service_healthy
 
+  # Gebouwde website (nginx). Niet standaard: `npm start` draait de site met Vite, zodat
+  # wijzigingen direct zichtbaar zijn. Productieversie testen: docker compose --profile prod up -d --build web
   web:
     build: ./frontend
+    profiles: ["prod"]
     restart: unless-stopped
     ports:
       - "${WEB_PORT:-8090}:80"

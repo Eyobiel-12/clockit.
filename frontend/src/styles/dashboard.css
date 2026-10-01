@@ -13,7 +13,7 @@
 .app .who { display: flex; align-items: center; gap: 12px; }
 .app .who small { display: block; color: var(--mute); }
 .app .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--green); display: inline-block; margin-right: 6px; }
-.app .acc { color: #5F7A7D; }
+.app .acc { color: var(--mute); }
 
 .app .alerts { list-style: none; }
 .app .al { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); }

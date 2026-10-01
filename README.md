@@ -56,7 +56,7 @@ Of korter: `.\start`. (Alleen `start` typen werkt niet: in PowerShell is dat een
 Dit doet in één keer:
 
 1. controleert of Docker draait (en start Docker Desktop als dat nodig is);
-2. start de **database**, de **API** en de **website** in Docker (de eerste keer bouwen duurt een paar minuten);
+2. start de **database** en de **API** in Docker (de eerste keer bouwen duurt een paar minuten) en de **website** met Vite: elke wijziging in `frontend/` zie je meteen in de browser, zonder herstarten;
 3. wacht tot de API klaar is;
 4. opent de website in je browser;
 5. start de **Expo-app** en toont de **QR-code** in de terminal.
@@ -106,8 +106,8 @@ Het demo-restaurant staat in Amsterdam, dus vanaf jouw plek krijg je eerst "Buit
 
 ### Stoppen
 
-- `Ctrl+C` in de terminal stopt de app-server (Expo).
-- `npm run stop` stopt ook de database, API en website (Docker). Je gegevens blijven bewaard.
+- `Ctrl+C` in de terminal stopt de website en de app-server (Expo).
+- `npm run stop` stopt ook de database en API (Docker). Je gegevens blijven bewaard.
 
 ---
 
@@ -128,7 +128,8 @@ Allemaal uitvoeren in de hoofdmap van het project.
 | Probleem | Oplossing |
 | --- | --- |
 | `Docker draait niet` | Open Docker Desktop, wacht tot *Engine running* en probeer opnieuw. |
-| `port is already allocated` | Een ander programma gebruikt poort 8090 of 3307. Kopieer `.env.example` naar `.env` en kies andere poorten (`WEB_PORT`, `DB_PORT`). |
+| `port is already allocated` | Een ander programma gebruikt poort 3307. Kopieer `.env.example` naar `.env` en kies een andere poort (`DB_PORT`). |
+| `De website (Vite) is gestopt` | Poort 8090 is bezet, bijvoorbeeld door een tweede `npm start` of `npm run dev`. Sluit dat venster en probeer opnieuw. |
 | App: "Geen verbinding met de server" | Telefoon op hetzelfde wifi? Sta in de Windows Firewall poort **4000** (API) en **8081** (Expo) toe voor privénetwerken. Onderaan het inlogscherm van de app staat welk adres hij probeert. |
 | QR-code opent de app niet | Staat Expo Go op je telefoon? Werkt het netwerk niet goed, probeer dan `cd mobile` en `npx expo start --tunnel`. |
 | "Buiten zone" bij inklokken | Zet de werkzone op jouw locatie (stap 7). |
@@ -148,7 +149,7 @@ Allemaal uitvoeren in de hoofdmap van het project.
 | `mobile/` | App: Expo (React Native) met Expo Router |
 | `db/init/` | MySQL-schema en demodata; draait bij de eerste start van de database |
 | `scripts/` | `setup.mjs` en `start.mjs` (achter `npm run setup` en `npm start`) |
-| `docker-compose.yml` | De services `db` (MySQL), `api` en `web` (nginx met de website) |
+| `docker-compose.yml` | De services `db` (MySQL), `api` en `web` (nginx met de gebouwde website, alleen met `--profile prod`) |
 
 ### Adressen en poorten
 
@@ -208,12 +209,12 @@ Een correctie is een verzoek om de tijden van een dienst aan te passen.
 
 ### Ontwikkelen met snel herladen
 
-Voor werken aan de website met directe updates in de browser:
+`npm start` draait de website al met directe updates in de browser (http://localhost:8090). Alleen de website, zonder de app:
 
 ```powershell
 docker compose up -d db api
 cd frontend
-npm run dev          # http://localhost:5173, /api gaat naar poort 4000
+npm run dev          # http://localhost:8090, /api gaat naar poort 4000
 ```
 
 De API lokaal draaien kan ook (stop dan eerst de `api`-container met `docker compose stop api`):
@@ -223,7 +224,9 @@ cd backend
 $env:DB_PORT=3307; npm run dev
 ```
 
-Na wijzigingen aan de website of API zonder `npm run dev`: `docker compose up -d --build` bouwt de containers opnieuw.
+Na wijzigingen aan de API: `docker compose up -d --build api` bouwt de container opnieuw.
+
+De gebouwde website (nginx, zoals in productie) testen: stop eerst `npm start` en draai `docker compose --profile prod up -d --build web`.
 
 ### De app los starten
 

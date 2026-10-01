@@ -11,7 +11,7 @@
 .app .tabs button:hover { background: var(--bg); }
 .app .tabs button.on { background: var(--mintl); color: var(--deep); }
 
-.app .pill.gr { background: #EEF1F0; color: #4F5F62; }
+.app .pill.gr { background: var(--mintl); color: var(--mute); }
 
 .app .menu-wrap { position: relative; display: inline-block; }
 .app .more {

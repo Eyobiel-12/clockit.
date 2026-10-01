@@ -4,7 +4,7 @@
   --mint: #BFE3D0;
   --mintl: #E6F4EC;
   --pin: #FFC845;
-  --mute: #4F6F74;
+  --mute: #2F5B62;
   --line: #DCEAE3;
   --bg: #F4F8F6;
   --red: #D64545;
@@ -82,7 +82,7 @@
   font-size: 15px; font-family: inherit;
 }
 .app .in:focus { outline: none; border-color: var(--deep); box-shadow: 0 0 0 3px rgba(14, 59, 67, .12); }
-.app .in::placeholder { color: #6F8A8D; }
+.app .in::placeholder { color: rgba(14, 59, 67, .55); }
 .app .error { color: #9E2B2B; font-size: 14px; font-weight: 600; margin: -4px 0 14px; }
 
 /* ---------- App-shell (zijbalk) ---------- */

@@ -19,7 +19,7 @@
 .app .grid-table th.c small { display: block; font-size: 11px; font-weight: 500; }
 .app .grid-table th.today { color: var(--deep); font-weight: 800; }
 .app td.c { text-align: center; font-variant-numeric: tabular-nums; padding: 6px; }
-.app td.c.muted { color: #9aa9a6; }
+.app td.c.muted { color: rgba(14, 59, 67, .45); }
 .app .cellbtn {
   font: inherit; font-variant-numeric: tabular-nums; color: inherit; background: transparent; border: 0;
   width: 100%; min-height: 38px; border-radius: 8px; cursor: pointer; padding: 0 6px;
@@ -32,7 +32,7 @@
 .app .legend { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 14px; font-size: 13px; color: var(--mute); }
 .app .warn { color: #7A5800; }
 .app .bad { color: #9E2B2B; }
-.app .acc { color: #5F7A7D; }
+.app .acc { color: var(--mute); }
 .app .timesheet .who small { display: block; color: var(--mute); }
 
 .app .detail { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-top: 22px; align-items: start; }
@@ -50,7 +50,7 @@
   .app .side, .app .no-print, .app .savebar { display: none !important; }
   .app .shell { display: block; background: #fff; }
   .app main.content { padding: 0; }
-  .app .panel { border: 1px solid #ccc; break-inside: avoid; }
+  .app .panel { border: 1px solid var(--line); break-inside: avoid; }
   .app .table-scroll { overflow: visible; }
   .app td.x .cellbtn { background: none; text-decoration: underline; }
   body { background: #fff; }
