@@ -6,7 +6,22 @@ export const app = createApp();
 /** De werkzone uit de demodata: Eetcafé De Kade, straal 120 m. */
 export const KADE = { lat: 52.377956, lng: 4.89707 };
 
+/**
+ * Wachtwoorden voor de tests. Dit zijn geen echte gegevens: `DEMO_PASSWORD` hoort
+ * bij de demodata in `db/init/002_seed.sql` en staat ook in de README. De andere
+ * twee bestaan alleen om de validatie te raken. Ze staan hier bij elkaar zodat er
+ * geen losse wachtwoord-teksten door de tests heen slingeren.
+ */
 export const DEMO_PASSWORD = 'wachtwoord12';
+
+/** Een bestaand account met het juiste e-mailadres maar de verkeerde sleutel. */
+export const WRONG_PASSWORD = 'dit-klopt-niet';
+
+/** Korter dan de 8 tekens die registreren vereist. */
+export const TOO_SHORT_PASSWORD = 'kort';
+
+/** Lang genoeg om de wachtwoordregel te halen, zodat een andere regel kan falen. */
+export const LONG_ENOUGH_PASSWORD = 'langgenoegomtehalen';
 
 /**
  * Logt in als demo-account en geeft het Bearer-token terug.

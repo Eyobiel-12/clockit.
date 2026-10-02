@@ -5,10 +5,10 @@ Zo werken we samen aan de code. Lees dit één keer door, daarna kun je het gebr
 ## In het kort
 
 1. Pak een ticket in Linear en zet het op **In Progress**.
-2. Maak een branch: `git switch -c klk-12-korte-omschrijving`.
+2. Maak een branch: `git switch -c clo-12-korte-omschrijving`.
 3. Bouw het, **met tests**.
 4. Draai de controles lokaal (zie hieronder).
-5. Open een pull request naar `Development` met `KLK-12` in de titel.
+5. Open een pull request naar `Development` met `CLO-12` in de titel.
 6. CI moet groen zijn en één teamlid moet goedkeuren.
 
 ## Branches
@@ -17,7 +17,7 @@ Zo werken we samen aan de code. Lees dit één keer door, daarna kun je het gebr
 | --- | --- |
 | `main` | Wat live staat. Alleen via een pull request vanuit `Development`. |
 | `Development` | Waar het werk samenkomt. Hier mergen feature-branches naartoe. |
-| `klk-<nummer>-<omschrijving>` | Jouw werk aan één ticket. |
+| `clo-<nummer>-<omschrijving>` | Jouw werk aan één ticket. |
 
 Werk nooit rechtstreeks in `main` of `Development`.
 
@@ -34,7 +34,7 @@ chore(deps): vitest naar 5.0.4
 
 Veelgebruikte types: `feat`, `fix`, `test`, `refactor`, `docs`, `chore`, `ci`.
 
-Zet het Linear-ticket in de titel of de omschrijving van je pull request (`KLK-12`), dan koppelt Linear het automatisch.
+Zet het Linear-ticket in de titel of de omschrijving van je pull request (`CLO-12`), dan koppelt Linear het automatisch.
 
 ## Controles die je lokaal draait
 
@@ -90,7 +90,7 @@ Een paar gewoontes die het makkelijker maken:
 
 ## Lint-waarschuwingen
 
-Lint faalt op fouten, niet op waarschuwingen. Een paar regels staan bewust op *waarschuwing* omdat bestaande code ze overtreedt; die ruimen we per ticket op. Zie `docs/BACKLOG.md`.
+Lint faalt op fouten, niet op waarschuwingen. Een paar regels staan bewust op *waarschuwing* omdat bestaande code ze overtreedt; die ruimen we per ticket op. Welk ticket waar bij hoort, staat in [docs/BACKLOG.md](docs/BACKLOG.md).
 
 Zet een regel niet uit om je eigen code erdoor te krijgen. Los het op, of overleg het in het ticket.
 

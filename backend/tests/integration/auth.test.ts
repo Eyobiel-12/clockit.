@@ -1,6 +1,14 @@
 import request from 'supertest';
 import { describe, expect, it } from 'vitest';
-import { DEMO_PASSWORD, app, asUser, login } from './helpers.js';
+import {
+  DEMO_PASSWORD,
+  LONG_ENOUGH_PASSWORD,
+  TOO_SHORT_PASSWORD,
+  WRONG_PASSWORD,
+  app,
+  asUser,
+  login,
+} from './helpers.js';
 
 describe('GET /api/health', () => {
   it('geeft ok terug als de database bereikbaar is', async () => {
@@ -43,7 +51,7 @@ describe('POST /api/auth/login', () => {
   it('weigert een verkeerd wachtwoord', async () => {
     const res = await request(app)
       .post('/api/auth/login')
-      .send({ email: 'sanne@dekade.nl', password: 'fout-wachtwoord' })
+      .send({ email: 'sanne@dekade.nl', password: WRONG_PASSWORD })
       .expect(401);
 
     expect(res.body.error).toMatch(/klopt niet/);
@@ -112,7 +120,7 @@ describe('POST /api/auth/register', () => {
         firstName: 'Test',
         lastName: 'Eigenaar',
         email: `eigenaar-${Date.now()}@test.nl`,
-        password: 'eenlangwachtwoord',
+        password: LONG_ENOUGH_PASSWORD,
         restaurantName: 'Testrestaurant',
       })
       .expect(201);
@@ -128,7 +136,7 @@ describe('POST /api/auth/register', () => {
         firstName: 'Nieuwe',
         lastName: 'Medewerker',
         email: `medewerker-${Date.now()}@test.nl`,
-        password: 'eenlangwachtwoord',
+        password: LONG_ENOUGH_PASSWORD,
         code: '482913',
       })
       .expect(201);
@@ -144,7 +152,7 @@ describe('POST /api/auth/register', () => {
         firstName: 'Nieuwe',
         lastName: 'Medewerker',
         email: `onbekend-${Date.now()}@test.nl`,
-        password: 'eenlangwachtwoord',
+        password: LONG_ENOUGH_PASSWORD,
         code: '000000',
       })
       .expect(400);
@@ -160,7 +168,7 @@ describe('POST /api/auth/register', () => {
         firstName: 'Test',
         lastName: 'Dubbel',
         email: 'sanne@dekade.nl',
-        password: 'eenlangwachtwoord',
+        password: LONG_ENOUGH_PASSWORD,
         restaurantName: 'Dubbel',
       })
       .expect(409);
@@ -176,7 +184,7 @@ describe('POST /api/auth/register', () => {
         firstName: 'Test',
         lastName: 'Kort',
         email: `kort-${Date.now()}@test.nl`,
-        password: 'kort',
+        password: TOO_SHORT_PASSWORD,
         restaurantName: 'Testrestaurant',
       })
       .expect(400);
@@ -192,7 +200,7 @@ describe('POST /api/auth/register', () => {
         firstName: 'Test',
         lastName: 'Ongeldig',
         email: 'geen-emailadres',
-        password: 'eenlangwachtwoord',
+        password: LONG_ENOUGH_PASSWORD,
         restaurantName: 'Testrestaurant',
       })
       .expect(400);

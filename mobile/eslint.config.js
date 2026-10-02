@@ -11,7 +11,7 @@ module.exports = defineConfig([
     // De React Compiler-regels wijzen bestaande patronen in onze data-hooks aan
     // (useApi en useFocusEffect roepen setState vanuit een effect). Dat werkt, maar
     // kan netter. Tot die refactor staan ze op "warn" zodat de rest van de lint
-    // wél hard faalt in CI. Zie KLK-9 in docs/BACKLOG.md.
+    // wél hard faalt in CI. Zie CLO-24 in Linear.
     files: ['src/**/*.{ts,tsx}'],
     rules: {
       'react-hooks/set-state-in-effect': 'warn',

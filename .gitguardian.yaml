@@ -1,0 +1,16 @@
+version: 2
+
+# Testbestanden bevatten nepwachtwoorden om de validatie te raken, bijvoorbeeld
+# `TOO_SHORT_PASSWORD = 'kort'` in backend/tests/integration/helpers.ts. Die zijn
+# geen secrets, maar de "Generic Password"-detector ziet dat verschil niet.
+#
+# LET OP: dit bestand werkt alleen voor de ggshield-opdrachtregel en pre-commit
+# hooks. De GitGuardian-app die de checks op pull requests zet, leest dit NIET.
+# Die exclusies moeten in het dashboard onder
+# Settings > Secrets Detection > Exclusion Rules. Zie CLO-19 in Linear.
+secret:
+  ignored_paths:
+    - 'backend/tests/**/*'
+    - '**/*.test.ts'
+    - '**/*.test.tsx'
+    - 'db/init/002_seed.sql'
