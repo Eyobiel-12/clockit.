@@ -218,11 +218,54 @@ jobs:
           cache-from: type=gha,scope=web
           cache-to: type=gha,mode=max,scope=web
 
+  # "Eén ticket, één pull request" is pas een regel als iets het controleert.
+  #
+  # Linear koppelt een pull request aan een ticket via de branchnaam of de titel. In
+  # de omschrijving werkt het alleen met een magisch woord ervoor ("Fixes CLO-12");
+  # een losse "CLO-12" in de tekst koppelt niets. Daarom kijkt deze job naar precies
+  # die drie plekken: anders zou de check groen zijn terwijl het ticket nooit
+  # meeschuift naar In Review.
+  ticket:
+    name: Linear-ticket gekoppeld
+    # Dependabot opent pull requests zonder ticket. Die willen we niet blokkeren.
+    if: github.event_name == 'pull_request' && github.actor != 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ticketverwijzing zoeken
+        env:
+          BRANCH: ${{ github.head_ref }}
+          TITLE: ${{ github.event.pull_request.title }}
+          BODY: ${{ github.event.pull_request.body }}
+        run: |
+          ticket='CLO-[0-9]+'
+          magic='(closes?d?|closing|fix(es|ed|ing)?|resolves?d?|resolving|completes?d?|completing|implements?|implemented|implementing|part of|refs?|references|contributes to|towards?)'
+
+          if printf '%s' "$BRANCH" | grep -Eiq "$ticket"; then
+            echo "Gevonden in de branchnaam: $BRANCH"
+          elif printf '%s' "$TITLE" | grep -Eiq "$ticket"; then
+            echo "Gevonden in de titel: $TITLE"
+          elif printf '%s' "$BODY" | grep -Eiq "$magic +$ticket"; then
+            echo "Gevonden in de omschrijving, met een magisch woord ervoor."
+          else
+            echo "Geen Linear-ticket gevonden in deze pull request." >&2
+            echo "" >&2
+            echo "Zet het ticketnummer op een van deze plekken, anders koppelt Linear niets" >&2
+            echo "en blijft het ticket op Todo staan:" >&2
+            echo "" >&2
+            echo "  - de branchnaam, bijvoorbeeld  clo-12-inklokken-op-de-app" >&2
+            echo "  - de titel, bijvoorbeeld       CLO-12 inklokken op de app" >&2
+            echo "  - de omschrijving, met een magisch woord: Fixes CLO-12" >&2
+            echo "" >&2
+            echo "Werk je maar aan een deel van het ticket? Gebruik 'Part of CLO-12'," >&2
+            echo "dan gaat het ticket bij de merge niet op Done." >&2
+            exit 1
+          fi
+
   # Eén check om in de branch protection van main te verplichten.
   ci-ok:
     name: CI geslaagd
     if: always()
-    needs: [backend, backend-integration, frontend, mobile, docker]
+    needs: [ticket, backend, backend-integration, frontend, mobile, docker]
     runs-on: ubuntu-latest
     steps:
       - name: Mislukte jobs melden
