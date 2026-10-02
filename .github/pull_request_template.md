@@ -2,7 +2,13 @@
 
 <!-- Kort en in gewone taal: wat kan de gebruiker nu wat eerst niet kon? -->
 
-Linear-ticket: CLO-
+<!--
+  Zet het ticketnummer ook in de titel of de branchnaam, dan koppelt Linear deze
+  pull request en schuift het ticket mee naar In Review.
+  Maak je het ticket hiermee niet af? Zet dan "Part of CLO-12" in plaats van "Fixes".
+-->
+
+Fixes CLO-
 
 ## Waarom
 

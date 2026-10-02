@@ -4,12 +4,35 @@ Zo werken we samen aan de code. Lees dit één keer door, daarna kun je het gebr
 
 ## In het kort
 
-1. Pak een ticket in Linear en zet het op **In Progress**.
-2. Maak een branch: `git switch -c clo-12-korte-omschrijving`.
+1. Pak een ticket in Linear: zet het op jezelf en op **In Progress**.
+2. Maak een branch met het ticketnummer erin: `git switch -c clo-12-korte-omschrijving`.
 3. Bouw het, **met tests**.
 4. Draai de controles lokaal (zie hieronder).
 5. Open een pull request naar `Development` met `CLO-12` in de titel.
 6. CI moet groen zijn en één teamlid moet goedkeuren.
+
+Eén ticket, één branch, één pull request. Is het werk groter dan dat, dan splits je het ticket.
+
+## Ticketstatus
+
+De status in Linear schuift met je pull request mee, dus die hoef je niet zelf bij te houden:
+
+| Status | Wanneer | Door |
+| --- | --- | --- |
+| **Backlog** | Het ticket is opgeschreven, nog niet ingepland. | iemand die het bedenkt |
+| **Todo** | Ingepland, nog niemand mee bezig. | wie plant |
+| **In Progress** | Je opent een pull request. | automatisch |
+| **In Review** | Je vraagt een review aan. | automatisch |
+| **Done** | De pull request is gemerged. | automatisch |
+
+Twee dingen doe je wel met de hand:
+
+- **Zet het ticket op jezelf** zodra je begint, zodat niemand hetzelfde werk oppakt.
+- **Zet het zelf op In Progress** als je nog geen pull request hebt maar al wel bezig bent.
+
+Dit werkt alleen als het ticketnummer in de **branchnaam** of de **titel** van de pull request staat. In de omschrijving telt het alleen met een magisch woord ervoor (`Fixes CLO-12`); een losse `CLO-12` in de tekst koppelt niets. De CI-check **Linear-ticket gekoppeld** faalt als het ticket nergens te vinden is.
+
+Gebruik `Fixes CLO-12` als de pull request het ticket afmaakt, en `Part of CLO-12` als er nog werk overblijft: dan zet de merge het ticket niet op Done.
 
 ## Branches
 
